@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="@dimen/imgMargin64"
+        android:layout_marginTop="@dimen/global_margin24"
+        android:layout_marginEnd="@dimen/imgMargin64"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/global_margin24"
+        android:layout_marginTop="@dimen/margin32"
+        android:layout_marginEnd="@dimen/global_margin24"
+        android:text="@string/name"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonAddPhoto" />
+
+    <TextView
+        android:id="@+id/textViewAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/global_margin24"
+        android:layout_marginTop="@dimen/global_margin24"
+        android:layout_marginEnd="@dimen/global_margin24"
+        android:text="@string/address"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageViewPhoneIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <ImageView
+        android:id="@+id/imageViewPhoneIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/global_margin24"
+        android:layout_marginTop="@dimen/global_margin24"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewPhone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddress"
+        app:srcCompat="@android:drawable/stat_sys_phone_call"
+        app:tint="@color/green_primary"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/textViewPhone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/buttonBetween8"
+        android:layout_marginTop="@dimen/global_margin24"
+        android:layout_marginEnd="@dimen/global_margin24"
+        android:text="@string/phone_number"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.63"
+        app:layout_constraintStart_toEndOf="@+id/imageViewPhoneIcon"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/global_margin24"
+        android:layout_marginTop="@dimen/global_margin64"
+        android:layout_marginBottom="@dimen/global_margin64"
+        android:text="@string/price"
+        android:textSize="26sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPhone" />
+
+    <ImageButton
+        android:id="@+id/imageButtonFavourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/buttonMargin64"
+        android:layout_marginTop="@dimen/imgMargin16"
+        android:layout_marginBottom="@dimen/margin32"
+        android:background="@android:color/transparent"
+        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:tint="@color/green_primary"
+        app:layout_constraintBottom_toTopOf="@+id/textViewTitle"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonAddPhoto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@drawable/favourite"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/imageButtonMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/buttonBetween16"
+        android:layout_marginEnd="@dimen/imgMargin64"
+        android:layout_marginBottom="@dimen/margin32"
+        android:backgroundTint="@android:color/transparent"
+        android:tint="@color/green_primary"
+        app:layout_constraintBottom_toTopOf="@+id/textViewTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonAddPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@android:drawable/ic_menu_mapmode"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/imageButtonAddPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/buttonBetween16"
+        android:backgroundTint="@android:color/transparent"
+        android:tint="@color/green_primary"
+        app:layout_constraintBottom_toTopOf="@+id/textViewTitle"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonMap"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonFavourite"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        tools:ignore="ContentDescription" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
