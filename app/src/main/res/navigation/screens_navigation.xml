@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screens_navigation"
+    app:startDestination="@id/splashNav">
+
+    <fragment
+        android:id="@+id/splashNav"
+        android:name="com.example.wheretoeat.SplashFragment"
+        tools:layout="@layout/splash_screen">
+        <action
+            android:id="@+id/action_splashNav_to_mainScreenNav"
+            app:destination="@id/mainScreenNav" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mainScreenNav"
+        android:name="com.example.wheretoeat.MainScreenFragment"
+        tools:layout="@layout/main_screen">
+        <action
+            android:id="@+id/action_mainScreenNav_to_profileNav"
+            app:destination="@id/profileNav" />
+        <action
+            android:id="@+id/action_mainScreenNav_to_detailNav"
+            app:destination="@id/detailNav" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileNav"
+        android:name="com.example.wheretoeat.ProfileFragment"
+        tools:layout="@layout/profile_screen" >
+        <action
+            android:id="@+id/action_profileNav_to_mainScreenNav2"
+            app:destination="@id/mainScreenNav" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailNav"
+        android:name="com.example.wheretoeat.DetailFragment"
+        tools:layout="@layout/detail_screen" >
+        <action
+            android:id="@+id/action_detailNav_to_mapNav"
+            app:destination="@id/mapNav" />
+        <action
+            android:id="@+id/action_detailNav_to_addOrDeletePhotosNav"
+            app:destination="@id/addOrDeletePhotosNav" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mapNav"
+        android:name="com.example.wheretoeat.MapActivity"
+        tools:layout="@layout/map_screen" />
+
+    <fragment
+        android:id="@+id/addOrDeletePhotosNav"
+        android:name="com.example.wheretoeat.AddOrDeletePhotosFragment"
+        tools:layout="@layout/add_or_delete_photos_screen" />
+
+</navigation>

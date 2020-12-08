@@ -9,14 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import com.bumptech.glide.Glide
 import android.widget.ImageView
+import androidx.navigation.Navigation
 
-class MainScreenRecyclerViewAdapter(dataSet: ArrayList<String>) : RecyclerView.Adapter<MainScreenRecyclerViewAdapter.ViewHolder>(){
+class MainScreenRecyclerViewAdapter(dataSet: ArrayList<String>
+) : RecyclerView.Adapter<MainScreenRecyclerViewAdapter.ViewHolder>(){
 
     private val dataList: ArrayList<String>
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.restaurants_listitem, viewGroup, false)
+            .inflate(R.layout.restaurants_listitem, viewGroup, false)
         return ViewHolder(view)
     }
 
@@ -35,22 +37,32 @@ class MainScreenRecyclerViewAdapter(dataSet: ArrayList<String>) : RecyclerView.A
         return dataList.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var image: ImageView
-        var restaurantName: TextView
-        var parenLayout: ConstraintLayout
-        var price: TextView
-        var address: TextView
-        var favourite: ImageButton
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener  {
+        var image: ImageView = itemView.findViewById(R.id.base_avatar)
+        var restaurantName: TextView = itemView.findViewById(R.id.textViewTitle)
+        var parenLayout: ConstraintLayout = itemView.findViewById(R.id.restaurant_view_layout)
+        var price: TextView = itemView.findViewById(R.id.textViewPrice)
+        var address: TextView = itemView.findViewById(R.id.textViewAddress)
+        var favourite: ImageButton = itemView.findViewById(R.id.imageButton)
 
         init {
-            image = itemView.findViewById(R.id.base_avatar)
-            restaurantName = itemView.findViewById(R.id.textViewTitle)
-            parenLayout = itemView.findViewById(R.id.restaurant_view_layout)
-            price = itemView.findViewById(R.id.textViewPrice)
-            address = itemView.findViewById(R.id.textViewAddress)
-            favourite = itemView.findViewById(R.id.imageButton)
+            itemView.setOnClickListener(this)
         }
+
+        override fun onClick(p0: View?) {
+            Navigation.findNavController(itemView).navigate(R.id.action_mainScreenNav_to_detailNav)
+        }
+
+        /*override fun onClick(v: View?) {
+            val position = adapterPosition
+            if( position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }*/
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(position: Int)
     }
 
     init {
