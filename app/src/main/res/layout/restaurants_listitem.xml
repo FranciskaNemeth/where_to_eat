@@ -9,7 +9,7 @@
     android:paddingBottom="@dimen/imgMargin16">
 
     <TextView
-        android:id="@+id/textViewAddress"
+        android:id="@+id/textViewPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/buttonBetween8"
@@ -18,7 +18,7 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPrice" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
 
     <ImageView
         android:id="@+id/base_avatar"
@@ -51,14 +51,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewPrice"
+        android:id="@+id/textViewAddress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/buttonBetween8"
         android:layout_marginEnd="@dimen/global_margin24"
         android:text="@string/address"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewAddress"
+        app:layout_constraintBottom_toTopOf="@+id/textViewPrice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/base_avatar"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />

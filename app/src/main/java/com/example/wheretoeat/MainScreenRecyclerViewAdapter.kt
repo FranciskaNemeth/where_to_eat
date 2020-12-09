@@ -10,11 +10,12 @@ import java.util.*
 import com.bumptech.glide.Glide
 import android.widget.ImageView
 import androidx.navigation.Navigation
+import com.example.wheretoeat.model.Restaurant
 
-class MainScreenRecyclerViewAdapter(dataSet: ArrayList<String>
+class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>
 ) : RecyclerView.Adapter<MainScreenRecyclerViewAdapter.ViewHolder>(){
 
-    private val dataList: ArrayList<String>
+    private val dataList: MutableList<Restaurant>
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
@@ -27,9 +28,9 @@ class MainScreenRecyclerViewAdapter(dataSet: ArrayList<String>
                 .placeholder(R.drawable.logo)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(holder.image)
-        holder.restaurantName.setText(dataList[position])
-        holder.price.setText(dataList[position])
-        holder.address.setText(dataList[position])
+        holder.restaurantName.setText(dataList[position].name)
+        holder.price.setText(dataList[position].price.toString())
+        holder.address.setText(dataList[position].address)
         holder.favourite.setOnClickListener {}
     }
 

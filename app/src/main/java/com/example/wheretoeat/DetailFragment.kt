@@ -30,9 +30,6 @@ class DetailFragment : Fragment() {
 
         val mapButton : ImageButton = view.findViewById(R.id.imageButtonMap)
         mapButton.setOnClickListener {
-            //Navigation.findNavController(view).navigate(R.id.action_detailNav_to_mapNav)
-            //findNavController().navigate(R.id.action_detailNav_to_mapNav)
-
             val intent = Intent(context, MapActivity::class.java)
             startActivity(intent)
         }
