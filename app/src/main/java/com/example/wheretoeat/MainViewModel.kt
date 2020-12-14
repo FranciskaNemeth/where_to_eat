@@ -19,6 +19,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     val citiesResponse : MutableLiveData<CitiesList> = MutableLiveData()
     val allRestaurantsList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
     val restaurantsFilteredList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
+    val citiesFilteredList : MutableLiveData<MutableList<String>> = MutableLiveData()
 
     fun getPost(cityName : String) {
         this.cityName = cityName
@@ -52,6 +53,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             val response : CitiesList = repository.getPostCities()
             citiesResponse.value = response
+            citiesFilteredList.value = response.cities
         }
     }
 
@@ -70,5 +72,21 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
 
         restaurantsFilteredList.value = arrayList
+    }
+
+    fun filterCities(searchText : String?) {
+        val arrayList : ArrayList<String> = ArrayList()
+        if (searchText != null && searchText.isNotEmpty() && citiesResponse.value != null) {
+            citiesResponse.value!!.cities.forEach{
+                if (it.toLowerCase(Locale.getDefault()).contains(searchText.toLowerCase(Locale.getDefault()))) {
+                    arrayList.add(it)
+                }
+            }
+        }
+        else {
+            arrayList.addAll(citiesResponse.value!!.cities)
+        }
+
+        citiesFilteredList.value = arrayList
     }
 }

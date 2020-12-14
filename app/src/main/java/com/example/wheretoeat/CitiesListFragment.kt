@@ -52,9 +52,9 @@ class CitiesListFragment : DialogFragment(), CitiesListRecyclerViewAdapter.OnIte
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        viewModel.citiesResponse.observe(requireActivity(), { response ->
+        viewModel.citiesFilteredList.observe(requireActivity(), { response ->
             displayList.clear()
-            displayList.addAll(response.cities)
+            displayList.addAll(response)
             recyclerView.adapter!!.notifyDataSetChanged()
         })
 
@@ -66,12 +66,12 @@ class CitiesListFragment : DialogFragment(), CitiesListRecyclerViewAdapter.OnIte
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
-                    viewModel.filter(newText)
+                    viewModel.filterCities(newText)
                 }
                 return false
             }
         })
-
+        searchView.setIconified(false)
 
         val itemDecoration = DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
         val drawable = GradientDrawable(

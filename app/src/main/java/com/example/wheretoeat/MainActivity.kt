@@ -1,19 +1,13 @@
 package com.example.wheretoeat
 
-import android.app.ActionBar
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -90,8 +84,8 @@ class MainActivity : AppCompatActivity() {
             cityButton.setOnClickListener{
                 //TODO:
                 // find bug
-                //val dialog = CitiesListFragment()
-                //dialog.show(supportFragmentManager,"customAlertDialog")
+                val dialog = CitiesListFragment()
+                dialog.show(supportFragmentManager, "cities_list")
             }
         }
 

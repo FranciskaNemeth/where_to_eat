@@ -15,7 +15,7 @@ class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>) : RecyclerView
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.photos_listitem, viewGroup, false)
+            .inflate(R.layout.cities_listitem, viewGroup, false)
         return ViewHolder(view)
     }
 
@@ -32,7 +32,7 @@ class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>) : RecyclerView
 
 
         init {
-            cityName = itemView.findViewById(R.id.imageViewPhoto)
+            cityName = itemView.findViewById(R.id.textViewCityName)
         }
     }
 
