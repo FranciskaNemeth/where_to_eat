@@ -1,5 +1,6 @@
 package com.example.wheretoeat
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,15 +13,38 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
+    private var lastSearchText: String? = null
+    lateinit var cityName: String
     val myResponse : MutableLiveData<City> = MutableLiveData()
     val citiesResponse : MutableLiveData<CitiesList> = MutableLiveData()
-    val filteredList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
+    val allRestaurantsList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
+    val restaurantsFilteredList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
 
     fun getPost(cityName : String) {
+        this.cityName = cityName
         viewModelScope.launch {
             val response : City = repository.getPost(cityName)
             myResponse.value = response
-            filteredList.value = response.restaurants
+            if (allRestaurantsList.value?.isNotEmpty() == true) {
+                allRestaurantsList.value?.clear()
+            }
+            if (restaurantsFilteredList.value?.isNotEmpty() == true) {
+                restaurantsFilteredList.value?.clear()
+            }
+            allRestaurantsList.value = response.restaurants
+            restaurantsFilteredList.value = response.restaurants
+        }
+    }
+
+    fun getRestaurantsPaginated(cityName: String, page:Int) {
+        this.cityName = cityName
+        viewModelScope.launch {
+            val response : City = repository.getRestaurantsPaginated(cityName, page)
+            myResponse.value = response
+            allRestaurantsList.value?.addAll(response.restaurants)
+            //TODO:
+            // check this out
+            filter(lastSearchText)
         }
     }
 
@@ -31,19 +55,20 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
-    fun filter(searchText : String) {
+    fun filter(searchText : String?) {
+        lastSearchText = searchText
         val arrayList : ArrayList<Restaurant> = ArrayList()
-        if (searchText.isNotEmpty()) {
-            myResponse.value!!.restaurants.forEach{
-                if (it.name.toLowerCase(Locale.getDefault()).startsWith(searchText.toLowerCase(Locale.getDefault()))) {
+        if (searchText != null && searchText.isNotEmpty() && allRestaurantsList.value != null) {
+            allRestaurantsList.value!!.forEach{
+                if (it.name.toLowerCase(Locale.getDefault()).contains(searchText.toLowerCase(Locale.getDefault()))) {
                     arrayList.add(it)
                 }
             }
         }
         else {
-            arrayList.addAll(myResponse.value!!.restaurants)
+            arrayList.addAll(allRestaurantsList.value!!)
         }
 
-        filteredList.value = arrayList
+        restaurantsFilteredList.value = arrayList
     }
 }

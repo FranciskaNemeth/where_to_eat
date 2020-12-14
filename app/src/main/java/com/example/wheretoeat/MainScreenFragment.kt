@@ -1,6 +1,5 @@
 package com.example.wheretoeat
 
-import android.content.ClipData
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
@@ -11,11 +10,13 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
+import kotlin.collections.ArrayList
 
 class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClickListener {
     val dataSet = arrayListOf("alma", "korte", "csoki", "banan", "helloka")
@@ -23,7 +24,9 @@ class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClick
     // retrofit test variable
     private lateinit var viewModel: MainViewModel
 
-    var displayList : MutableList<Restaurant> = ArrayList()
+    // flag that signals if the recycle view has reached the end or some arbitrary end position
+    var hasStartedDataRetrieval = false
+    var displayList: MutableList<Restaurant> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +34,13 @@ class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClick
         // retrofit test
         val repository = Repository()
         val viewModelFactory = MainViewModelFactory(repository)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
+        viewModel =
+                ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.main_screen, container, false)
@@ -52,26 +56,21 @@ class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClick
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        viewModel.citiesResponse.observe(viewLifecycleOwner, { response ->
+        // add listener for when the recycleview reaches the last couple of items
+        // so we can start loading the next batch of data
+        recyclerView.addOnScrollListener(getOnScrollListener())
 
-        })
-
-        viewModel.filteredList.observe(requireActivity(), Observer { response ->
+        viewModel.restaurantsFilteredList.observe(requireActivity(), Observer { response ->
             displayList.clear()
             displayList.addAll(response)
             recyclerView.adapter!!.notifyDataSetChanged()
+            hasStartedDataRetrieval = false
         })
 
-        /*viewModel.myResponse.observe(requireActivity(), Observer { response ->
-            displayList = response.restaurants
-            recyclerView.adapter!!.notifyDataSetChanged()
-        })*/
-
-        //viewModel.getPost("London")
-
-        val itemDecoration = DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
+        val itemDecoration =
+                DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
         val drawable = GradientDrawable(
-            GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(-0x7373730, -0x7373730)
+                GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(-0x7373730, -0x7373730)
         )
         drawable.setSize(1, 5)
         itemDecoration.setDrawable(drawable)
@@ -79,8 +78,36 @@ class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClick
     }
 
     override fun onItemClick(position: Int) {
-        val clickedItem : String = dataSet[position]
+        val clickedItem: String = dataSet[position]
         //adapter.notifyItemChanged(position)
+    }
+
+    private fun getOnScrollListener(): RecyclerView.OnScrollListener {
+
+        return object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = (recyclerView.layoutManager as LinearLayoutManager)
+                val totalItemCount = layoutManager.itemCount
+                val lastVisible = layoutManager.findLastVisibleItemPosition()
+
+                val endHasBeenReached = lastVisible + 5 >= totalItemCount
+
+                if (totalItemCount > 0 && endHasBeenReached) {
+                    // get the next batch of data
+                    val currentPage = viewModel.myResponse.value?.page
+                    val perPageItems = viewModel.myResponse.value?.per_page
+                    val totalItems = viewModel.myResponse.value?.total_entries
+
+                    if (currentPage != null && perPageItems != null && totalItems != null) {
+
+                        if (currentPage * perPageItems < totalItems && !hasStartedDataRetrieval) {
+                            hasStartedDataRetrieval = true
+                            viewModel.getRestaurantsPaginated(viewModel.cityName, currentPage + 1)
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

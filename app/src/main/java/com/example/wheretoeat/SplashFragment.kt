@@ -16,7 +16,7 @@ import kotlin.coroutines.CoroutineContext
 
 class SplashFragment : Fragment(){
     //override val coroutineContext: CoroutineContext
-      //  get() = Dispatchers.Main + Job()
+    //  get() = Dispatchers.Main + Job()
 
     private lateinit var viewModel: MainViewModel
 
@@ -31,8 +31,8 @@ class SplashFragment : Fragment(){
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         //findNavController().navigate(R.id.action_splashNav_to_mainScreenNav)
@@ -43,7 +43,7 @@ class SplashFragment : Fragment(){
             }
         })
 
-        viewModel.getPost("London")
+        viewModel.getPost("Dallas")
 
 
         /*Timer().schedule(object : TimerTask() {

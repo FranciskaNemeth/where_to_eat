@@ -71,14 +71,14 @@ class MainActivity : AppCompatActivity() {
             val searchView = menuItem.actionView as SearchView
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
+                    return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
                     if (newText != null) {
                         viewModel.filter(newText)
                     }
-                    return true
+                    return false
                 }
             })
         }
@@ -88,41 +88,14 @@ class MainActivity : AppCompatActivity() {
             cityButton.foreground = getDrawable(R.drawable.ic_baseline_location_city_24)
             cityButton.background.alpha = 0
             cityButton.setOnClickListener{
-                showDialog(cityButton)
+                //TODO:
+                // find bug
+                //val dialog = CitiesListFragment()
+                //dialog.show(supportFragmentManager,"customAlertDialog")
             }
         }
 
         return super.onCreateOptionsMenu(menu)
-    }
-
-    private fun showDialog(view: View) {
-        view.isEnabled = false
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Choose a city")
-
-        val options = arrayOf("Option A", "Option B")
-
-        builder.setItems(options) { dialog, which ->
-            dialog.dismiss()
-
-            /*when (which) {
-                0 -> Toast.makeText(this, "Selected city:${options[0]}", Toast.LENGTH_LONG).show()
-                1 -> Toast.makeText(this, "Selected city:${options[1]}", Toast.LENGTH_LONG).show()
-            }*/
-
-            view.isEnabled = true
-        }
-
-        builder.setOnCancelListener {
-            view.isEnabled = true
-        }
-
-        builder.show()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
     }
 
 }

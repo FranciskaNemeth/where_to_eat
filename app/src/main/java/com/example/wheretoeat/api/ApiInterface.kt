@@ -10,6 +10,9 @@ interface ApiInterface {
     @GET("restaurants")
     suspend fun getPost(@Query("city")city : String) : City
 
+    @GET("restaurants")
+    suspend fun getRestaurantsPaginated(@Query("city") city: String, @Query("page")page: Int=3): City
+
     @GET("cities")
     suspend fun getPostCities() : CitiesList
 }

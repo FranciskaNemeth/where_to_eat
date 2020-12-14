@@ -10,6 +10,10 @@ class Repository {
         return RetrofitInstance.api.getPost(cityName)
     }
 
+    suspend fun getRestaurantsPaginated(cityName: String, page: Int): City {
+        return RetrofitInstance.api.getRestaurantsPaginated(cityName, page)
+    }
+
     suspend fun getPostCities() : CitiesList {
         return RetrofitInstance.api.getPostCities()
     }

@@ -17,4 +17,14 @@
     <string name="search">Search</string>
     <string name="profile">Profile</string>
     <string name="cities">Cities</string>
+
+    <string name="selected_item">Selected item:</string>
+    <string-array name="Cities">
+        <item>New York</item>
+        <item>Bern</item>
+        <item>Wien</item>
+        <item>London</item>
+        <item>Budapest</item>
+        <item>Chicago</item>
+    </string-array>
 </resources>
