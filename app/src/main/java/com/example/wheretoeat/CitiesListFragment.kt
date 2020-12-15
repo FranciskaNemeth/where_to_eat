@@ -1,12 +1,14 @@
 package com.example.wheretoeat
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +44,20 @@ class CitiesListFragment : DialogFragment(), CitiesListRecyclerViewAdapter.OnIte
         val repository = Repository()
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
+
+        viewModel.error.observe(requireActivity(), Observer { result ->
+            val alertDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            alertDialog.setTitle(result.toString())
+            alertDialog.setMessage("Please check your internet connection or try again later!")
+            alertDialog.setCancelable(false)
+            alertDialog.setPositiveButton("Ok",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        dialog.dismiss()
+                        requireActivity().finish()
+                    })
+            alertDialog.create()
+            alertDialog.show()
+        })
 
         viewModel.getPostCities()
 

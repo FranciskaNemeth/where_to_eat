@@ -1,5 +1,6 @@
 package com.example.wheretoeat
 
+import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -67,8 +69,21 @@ class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClick
             hasStartedDataRetrieval = false
         })
 
-        val itemDecoration =
-                DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
+        viewModel.error.observe(requireActivity(), Observer { result ->
+            val alertDialog = AlertDialog.Builder(requireContext())
+            alertDialog.setTitle(result.toString())
+            alertDialog.setMessage("Please check your internet connection or try again later!")
+            alertDialog.setCancelable(false)
+            alertDialog.setPositiveButton("Ok",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        dialog.dismiss()
+                        requireActivity().finish()
+                    })
+            alertDialog.create()
+            alertDialog.show()
+        })
+
+        val itemDecoration = DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
         val drawable = GradientDrawable(
                 GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(-0x7373730, -0x7373730)
         )

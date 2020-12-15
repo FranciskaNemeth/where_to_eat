@@ -28,7 +28,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         viewModelScope.launch {
             val response : City? = repository.getPost(cityName)
             if (response == null) {
-                error.value = "Server Error!"
+                error.value = "Server ERROR!"
             }
             else {
                 myResponse.value = response
@@ -48,20 +48,30 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     fun getRestaurantsPaginated(cityName: String, page:Int) {
         this.cityName = cityName
         viewModelScope.launch {
-            val response : City = repository.getRestaurantsPaginated(cityName, page)
-            myResponse.value = response
-            allRestaurantsList.value?.addAll(response.restaurants)
-            //TODO:
-            // check this out
-            filter(lastSearchText)
+            val response : City? = repository.getRestaurantsPaginated(cityName, page)
+            if(response == null) {
+                error.value = "ERROR: getting data from server!"
+            }
+            else {
+                myResponse.value = response
+                allRestaurantsList.value?.addAll(response.restaurants)
+                filter(lastSearchText)
+            }
+
         }
     }
 
     fun getPostCities() {
         viewModelScope.launch {
-            val response : CitiesList = repository.getPostCities()
-            citiesResponse.value = response
-            citiesFilteredList.value = response.cities
+            val response : CitiesList? = repository.getPostCities()
+
+            if(response == null) {
+                error.value = "ERROR: getting data from server!"
+            }
+            else {
+                citiesResponse.value = response
+                citiesFilteredList.value = response.cities
+            }
         }
     }
 

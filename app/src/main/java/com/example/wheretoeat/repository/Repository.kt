@@ -5,6 +5,7 @@ import com.example.wheretoeat.api.RetrofitInstance
 import com.example.wheretoeat.model.CitiesList
 import com.example.wheretoeat.model.City
 import com.example.wheretoeat.model.Restaurant
+import java.lang.Error
 
 class Repository {
     suspend fun getPost(cityName : String) : City? {
@@ -18,11 +19,25 @@ class Repository {
         return post
     }
 
-    suspend fun getRestaurantsPaginated(cityName: String, page: Int): City {
-        return RetrofitInstance.api.getRestaurantsPaginated(cityName, page)
+    suspend fun getRestaurantsPaginated(cityName: String, page: Int): City? {
+        lateinit var post : City
+        try {
+            post = RetrofitInstance.api.getRestaurantsPaginated(cityName, page)
+        }
+        catch (e : Exception) {
+            return null
+        }
+        return post
     }
 
-    suspend fun getPostCities() : CitiesList {
-        return RetrofitInstance.api.getPostCities()
+    suspend fun getPostCities() : CitiesList? {
+        lateinit var post : CitiesList
+        try {
+            post = RetrofitInstance.api.getPostCities()
+        }
+        catch (e : Exception) {
+            return null
+        }
+        return post
     }
 }
