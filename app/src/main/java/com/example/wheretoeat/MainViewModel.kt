@@ -1,5 +1,6 @@
 package com.example.wheretoeat
 
+import android.app.AlertDialog
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,20 +21,27 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     val allRestaurantsList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
     val restaurantsFilteredList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
     val citiesFilteredList : MutableLiveData<MutableList<String>> = MutableLiveData()
+    val error : MutableLiveData<String> = MutableLiveData()
 
     fun getPost(cityName : String) {
         this.cityName = cityName
         viewModelScope.launch {
-            val response : City = repository.getPost(cityName)
-            myResponse.value = response
-            if (allRestaurantsList.value?.isNotEmpty() == true) {
-                allRestaurantsList.value?.clear()
+            val response : City? = repository.getPost(cityName)
+            if (response == null) {
+                error.value = "Server Error!"
             }
-            if (restaurantsFilteredList.value?.isNotEmpty() == true) {
-                restaurantsFilteredList.value?.clear()
+            else {
+                myResponse.value = response
+                if (allRestaurantsList.value?.isNotEmpty() == true) {
+                    allRestaurantsList.value?.clear()
+                }
+                if (restaurantsFilteredList.value?.isNotEmpty() == true) {
+                    restaurantsFilteredList.value?.clear()
+                }
+                allRestaurantsList.value = response.restaurants
+                restaurantsFilteredList.value = response.restaurants
             }
-            allRestaurantsList.value = response.restaurants
-            restaurantsFilteredList.value = response.restaurants
+
         }
     }
 
