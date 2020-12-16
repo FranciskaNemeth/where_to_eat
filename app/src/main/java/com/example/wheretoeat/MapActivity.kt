@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
+import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -19,10 +20,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener,
-    ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.OnMarkerClickListener {
+    ActivityCompat.OnRequestPermissionsResultCallback {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
@@ -102,6 +104,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
                     CameraUpdateFactory
                             .newLatLngZoom(restaurant, 18f), 5000, null
             )
+
+            Snackbar.make(findViewById(R.id.mapView), "Restaurant Location button clicked", Snackbar.LENGTH_LONG).show()
+            //Toast.makeText(this, "Restaurant Location button clicked", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -123,17 +128,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
 
 
     override fun onMyLocationButtonClick(): Boolean {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show()
+        Snackbar.make(findViewById(R.id.mapView), "My Location button clicked", Snackbar.LENGTH_LONG).show()
+        //Toast.makeText(this, "My Location button clicked", Toast.LENGTH_SHORT).show()
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false
     }
 
     override fun onMyLocationClick(location: Location) {
-        Toast.makeText(this, "Current location: $location", Toast.LENGTH_LONG).show()
+        Snackbar.make(findViewById(R.id.mapView), "Current location:\n${location.latitude}, ${location.longitude}", Snackbar.LENGTH_LONG).show()
+        //Toast.makeText(this, "Current location: ${location.latitude}, ${location.longitude}", Toast.LENGTH_LONG).show()
     }
 
-    override fun onMarkerClick(p0: Marker?): Boolean {
-        return false
-    }
 }
