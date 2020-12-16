@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener,
@@ -67,20 +69,41 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         googleMap.setOnMyLocationButtonClickListener(this)
         googleMap.setOnMyLocationClickListener(this)
 
+        val restaurantLocation : ImageButton = findViewById(R.id.imageButtonMarker)
+
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         val criteria = Criteria()
         val provider = locationManager.getBestProvider(criteria, true) ?: return
         val location = locationManager.getLastKnownLocation(provider)
 
-        if (location != null) {
-            val latitude = location.latitude
-            val longitude = location.longitude
-            val coordinate = LatLng(latitude, longitude)
-            googleMap.animateCamera(
-                CameraUpdateFactory
-                    .newLatLngZoom(coordinate, 18f), 5000, null
+        val coordinateLat = intent.getStringExtra("lat")
+        val lat = coordinateLat!!.toDouble()
+        val coordinateLng = intent.getStringExtra("lng")
+        val lng = coordinateLng!!.toDouble()
+        lateinit var restaurant : LatLng
+        val name = intent.getStringExtra("name")
+
+        googleMap.apply {
+            restaurant = LatLng(lat, lng)
+            addMarker(
+                    MarkerOptions()
+                            .position(restaurant)
+                            .title(name)
             )
         }
+
+        googleMap.animateCamera(
+                CameraUpdateFactory
+                        .newLatLngZoom(restaurant, 18f), 5000, null
+        )
+
+        restaurantLocation.setOnClickListener {
+            googleMap.animateCamera(
+                    CameraUpdateFactory
+                            .newLatLngZoom(restaurant, 18f), 5000, null
+            )
+        }
+
     }
 
     private fun enableMyLocation() {

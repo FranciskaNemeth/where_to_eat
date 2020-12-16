@@ -40,6 +40,9 @@ class DetailFragment : Fragment() {
         val mapButton : ImageButton = view.findViewById(R.id.imageButtonMap)
         mapButton.setOnClickListener {
             val intent = Intent(context, MapActivity::class.java)
+            intent.putExtra("lat", viewModel.selectedRestaurant.value?.lat.toString())
+            intent.putExtra("lng", viewModel.selectedRestaurant.value?.lng.toString())
+            intent.putExtra("name", viewModel.selectedRestaurant.value?.name.toString())
             startActivity(intent)
         }
 
