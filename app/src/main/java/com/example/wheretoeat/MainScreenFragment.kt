@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +21,7 @@ import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
 import kotlin.collections.ArrayList
 
-class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClickListener {
+class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
     val dataSet = arrayListOf("alma", "korte", "csoki", "banan", "helloka")
 
     // retrofit test variable
@@ -54,7 +55,7 @@ class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClick
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val adapter = MainScreenRecyclerViewAdapter(displayList)
+        val adapter = MainScreenRecyclerViewAdapter(displayList, this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -93,8 +94,9 @@ class MainScreenFragment : Fragment(), MainScreenRecyclerViewAdapter.OnItemClick
     }
 
     override fun onItemClick(position: Int) {
-        val clickedItem: String = dataSet[position]
-        //adapter.notifyItemChanged(position)
+        val restaurant = displayList[position]
+        viewModel.setSelectedRestaurant(restaurant)
+        findNavController().navigate(R.id.action_mainScreenNav_to_detailNav)
     }
 
     private fun getOnScrollListener(): RecyclerView.OnScrollListener {

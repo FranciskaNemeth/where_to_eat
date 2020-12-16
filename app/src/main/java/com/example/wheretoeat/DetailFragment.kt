@@ -8,13 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.example.wheretoeat.repository.Repository
 
 class DetailFragment : Fragment() {
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val repository = Repository()
+        val viewModelFactory = MainViewModelFactory(repository)
+        viewModel =
+                ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -38,5 +47,17 @@ class DetailFragment : Fragment() {
         addOrDeleteButton.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_detailNav_to_addOrDeletePhotosNav)
         }
+
+        val restaurantName = view.findViewById<TextView>(R.id.textViewTitle)
+        val restaurantAddress = view.findViewById<TextView>(R.id.textViewAddress)
+        val restaurantPhone = view.findViewById<TextView>(R.id.textViewPhone)
+        val restaurantPrice = view.findViewById<TextView>(R.id.textViewPrice)
+
+        viewModel.selectedRestaurant.observe(requireActivity(), Observer { restaurant ->
+            restaurantName.text = restaurant.name
+            restaurantAddress.text = restaurant.address
+            restaurantPhone.text = restaurant.phone.take(10)
+            restaurantPrice.text = restaurant.price.toString()
+        })
     }
 }

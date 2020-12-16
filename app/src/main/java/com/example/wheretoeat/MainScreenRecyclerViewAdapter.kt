@@ -12,7 +12,7 @@ import android.widget.ImageView
 import androidx.navigation.Navigation
 import com.example.wheretoeat.model.Restaurant
 
-class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>
+class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, private val clickListener: OnRestaurantItemClickListener
 ) : RecyclerView.Adapter<MainScreenRecyclerViewAdapter.ViewHolder>(){
 
     private val dataList: MutableList<Restaurant>
@@ -51,23 +51,17 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>
         }
 
         override fun onClick(p0: View?) {
-            Navigation.findNavController(itemView).navigate(R.id.action_mainScreenNav_to_detailNav)
+            clickListener.onItemClick(adapterPosition)
+
         }
-
-        /*override fun onClick(v: View?) {
-            val position = adapterPosition
-            if( position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(position)
-            }
-        }*/
-    }
-
-    interface OnItemClickListener{
-        fun onItemClick(position: Int)
     }
 
     init {
         this.dataList = dataSet
     }
 
+}
+
+interface OnRestaurantItemClickListener{
+    fun onItemClick(position: Int)
 }

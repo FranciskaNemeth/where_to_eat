@@ -95,7 +95,7 @@ class CitiesListFragment : DialogFragment(), OnCityItemClickListener {
         recyclerView.addItemDecoration(itemDecoration)
     }
 
-    override fun onItemClick(position: Int, view: View) {
+    override fun onItemClick(position: Int) {
         cityName = this.displayList[position]
         viewModel.getPost(cityName)
         dialog?.dismiss()

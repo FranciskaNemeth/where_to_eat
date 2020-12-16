@@ -33,7 +33,7 @@ class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>, private var cl
         }
 
         override fun onClick(view: View) {
-            clickListener.onItemClick(adapterPosition, view)
+            clickListener.onItemClick(adapterPosition)
         }
 
     }
@@ -45,5 +45,5 @@ class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>, private var cl
 }
 
 interface OnCityItemClickListener{
-    fun onItemClick(position: Int, view : View)
+    fun onItemClick(position: Int)
 }

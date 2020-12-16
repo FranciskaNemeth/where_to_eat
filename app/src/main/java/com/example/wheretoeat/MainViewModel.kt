@@ -22,6 +22,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     val restaurantsFilteredList : MutableLiveData<MutableList<Restaurant>> = MutableLiveData()
     val citiesFilteredList : MutableLiveData<MutableList<String>> = MutableLiveData()
     val error : MutableLiveData<String> = MutableLiveData()
+    val selectedRestaurant : MutableLiveData<Restaurant> = MutableLiveData()
 
     fun getPost(cityName : String) {
         this.cityName = cityName
@@ -106,5 +107,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
 
         citiesFilteredList.value = arrayList
+    }
+
+    fun setSelectedRestaurant(restaurant: Restaurant) {
+        selectedRestaurant.value = restaurant
     }
 }
