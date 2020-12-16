@@ -1,37 +1,34 @@
 package com.example.wheretoeat
 
-import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.SearchView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.wheretoeat.model.City
-import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
 
 
-class CitiesListFragment : DialogFragment(), CitiesListRecyclerViewAdapter.OnItemClickListener {
+class CitiesListFragment : DialogFragment(), OnCityItemClickListener {
 
     private lateinit var viewModel: MainViewModel
     lateinit var  inf : View
     val displayList :  MutableList<String> = ArrayList()
     lateinit var recyclerView : RecyclerView
+    lateinit var cityName : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         inf = inflater.inflate(R.layout.cities_list, container, false)
@@ -63,7 +60,7 @@ class CitiesListFragment : DialogFragment(), CitiesListRecyclerViewAdapter.OnIte
 
         recyclerView = inf.findViewById(R.id.recyclerViewCity)
 
-        val adapter = CitiesListRecyclerViewAdapter(displayList)
+        val adapter = CitiesListRecyclerViewAdapter(displayList, this)
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -98,8 +95,9 @@ class CitiesListFragment : DialogFragment(), CitiesListRecyclerViewAdapter.OnIte
         recyclerView.addItemDecoration(itemDecoration)
     }
 
-
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int, view: View) {
+        cityName = this.displayList[position]
+        viewModel.getPost(cityName)
         dialog?.dismiss()
     }
 }

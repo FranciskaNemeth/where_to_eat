@@ -3,13 +3,10 @@ package com.example.wheretoeat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.wheretoeat.model.City
-import java.util.ArrayList
 
-class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>) : RecyclerView.Adapter<CitiesListRecyclerViewAdapter.ViewHolder>(){
+class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>, private var clickListener: OnCityItemClickListener) : RecyclerView.Adapter<CitiesListRecyclerViewAdapter.ViewHolder>(){
 
     private val dataList: MutableList<String>
 
@@ -27,21 +24,26 @@ class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>) : RecyclerView
         return dataList.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var cityName: TextView
 
-
         init {
+            itemView.setOnClickListener(this)
             cityName = itemView.findViewById(R.id.textViewCityName)
         }
-    }
 
-    interface OnItemClickListener{
-        fun onItemClick(position: Int)
+        override fun onClick(view: View) {
+            clickListener.onItemClick(adapterPosition, view)
+        }
+
     }
 
     init {
         this.dataList = dataSet
     }
 
+}
+
+interface OnCityItemClickListener{
+    fun onItemClick(position: Int, view : View)
 }
