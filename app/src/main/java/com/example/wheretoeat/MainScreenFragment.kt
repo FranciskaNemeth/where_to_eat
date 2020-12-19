@@ -4,12 +4,12 @@ import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -39,6 +39,9 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
+
+        requireActivity().invalidateOptionsMenu()
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -93,6 +96,11 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         recyclerView.addItemDecoration(itemDecoration)
     }
 
+    override fun onStart() {
+        super.onStart()
+        requireActivity().setTitle("Where To Eat")
+    }
+
     override fun onItemClick(position: Int) {
         val restaurant = displayList[position]
         viewModel.setSelectedRestaurant(restaurant)
@@ -125,6 +133,41 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
                 }
             }
         }
+    }
+
+    // search recyclerview
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)  {
+        inflater.inflate(R.menu.search_menu, menu)
+        val menuItem = menu!!.findItem(R.id.actionSearch)
+        val menuItemCity = menu.findItem(R.id.actionCities)
+
+        if (menuItem != null) {
+            val searchView = menuItem.actionView as SearchView
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText != null) {
+                        viewModel.filter(newText)
+                    }
+                    return false
+                }
+            })
+        }
+
+        if (menuItemCity != null) {
+            val cityButton = menuItemCity.actionView as AppCompatImageButton
+            cityButton.foreground = requireActivity().getDrawable(R.drawable.ic_baseline_location_city_24)
+            cityButton.background.alpha = 0
+            cityButton.setOnClickListener{
+                val dialog = CitiesListFragment()
+                dialog.show(requireActivity().supportFragmentManager, "cities_list")
+            }
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
 }

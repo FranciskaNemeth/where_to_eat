@@ -8,7 +8,7 @@
         tools:ignore="MenuTitle" />
 
     <item
-        android:id="@+id/navigation_favourite"
+        android:id="@+id/favoriteNav"
         android:icon="@drawable/favourite"
         tools:ignore="MenuTitle" />
 

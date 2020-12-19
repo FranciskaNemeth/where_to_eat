@@ -26,21 +26,34 @@
         <action
             android:id="@+id/action_mainScreenNav_to_detailNav"
             app:destination="@id/detailNav" />
+        <action
+            android:id="@+id/action_mainScreenNav_to_favoriteNav"
+            app:destination="@id/favoriteNav" />
     </fragment>
 
     <fragment
         android:id="@+id/profileNav"
         android:name="com.example.wheretoeat.ProfileFragment"
-        tools:layout="@layout/profile_screen" >
+        tools:layout="@layout/profile_screen">
         <action
-            android:id="@+id/action_profileNav_to_mainScreenNav2"
+            android:id="@+id/action_profileNav_to_mainScreenNav"
             app:destination="@id/mainScreenNav" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteNav"
+        android:name="com.example.wheretoeat.FavoriteRestaurantsFragment"
+        tools:layout="@layout/favorite_restaurants_screen">
+
+        <action
+            android:id="@+id/action_favoriteNav_to_detailNav"
+            app:destination="@id/detailNav" />
     </fragment>
 
     <fragment
         android:id="@+id/detailNav"
         android:name="com.example.wheretoeat.DetailFragment"
-        tools:layout="@layout/detail_screen" >
+        tools:layout="@layout/detail_screen">
         <action
             android:id="@+id/action_detailNav_to_mapNav"
             app:destination="@id/mapNav" />

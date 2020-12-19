@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.wheretoeat.repository.Repository
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -53,43 +55,6 @@ class MainActivity : AppCompatActivity() {
     private fun hideBottomNav() {
         bottomNavView.visibility = View.GONE
 
-    }
-
-    // search recyclerview
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_menu, menu)
-        val menuItem = menu!!.findItem(R.id.actionSearch)
-        val menuItemCity = menu.findItem(R.id.actionCities)
-
-        if (menuItem != null) {
-            val searchView = menuItem.actionView as SearchView
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText != null) {
-                        viewModel.filter(newText)
-                    }
-                    return false
-                }
-            })
-        }
-
-        if (menuItemCity != null) {
-            val cityButton = menuItemCity.actionView as AppCompatImageButton
-            cityButton.foreground = getDrawable(R.drawable.ic_baseline_location_city_24)
-            cityButton.background.alpha = 0
-            cityButton.setOnClickListener{
-                //TODO:
-                // find bug
-                val dialog = CitiesListFragment()
-                dialog.show(supportFragmentManager, "cities_list")
-            }
-        }
-
-        return super.onCreateOptionsMenu(menu)
     }
 
 }
