@@ -135,7 +135,6 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
                     val scope = CoroutineScope(Dispatchers.IO)
                     scope.launch {
                         val rid = myDatabaseViewModel.getNextPictureId()
-                        Log.d("rid", "$rid")
                         val restaurantImageEntity =
                             RestaurantImageEntity(rid, selectedRestaurant.id, imageByteArray)
                         myDatabaseViewModel.addRestaurantImage(restaurantImageEntity)

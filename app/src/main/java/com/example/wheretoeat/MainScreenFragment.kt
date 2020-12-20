@@ -127,7 +127,6 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         viewModel.setSelectedRestaurant(restaurant)
         var flag = false
         myDatabaseViewModel.favoriteRestaurantsList.value!!.forEach {
-            Log.d("fav | res", "${it.id} | ${restaurant.id}")
             if (it.id == restaurant.id) {
                 viewModel.selectedFavoriteRestaurant.value = it
                 flag = true

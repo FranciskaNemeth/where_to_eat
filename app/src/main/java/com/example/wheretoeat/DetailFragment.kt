@@ -73,7 +73,6 @@ class DetailFragment : Fragment() {
 
         val favoriteButton : ImageButton = view.findViewById(R.id.imageButtonFavourite)
         val favRestId = viewModel.selectedFavoriteRestaurant.value?.id
-        Log.d("favRestId", "$favRestId")
         if (favRestId != null ) {
             favoriteButton.setImageResource(R.drawable.favourite)
             favoriteButton.setTag(R.drawable.favourite)

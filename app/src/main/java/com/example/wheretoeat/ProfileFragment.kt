@@ -74,9 +74,7 @@ class ProfileFragment : Fragment() {
             }
         })
 
-        Log.d("muki out", "${myDatabaseViewModel.favoriteRestaurantsList.value}")
         myDatabaseViewModel.favoriteRestaurantsList.observe(requireActivity(), Observer { restaurantList ->
-            Log.d("muki", "$restaurantList")
             view?.post {
                 var favoriteRestaurantsTextFieldData = ""
 
