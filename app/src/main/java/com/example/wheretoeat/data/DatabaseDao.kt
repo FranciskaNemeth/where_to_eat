@@ -1,9 +1,10 @@
 package com.example.wheretoeat.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
-import javax.sql.DataSource
+import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
+import com.example.wheretoeat.entity.RestaurantImageEntity
+import com.example.wheretoeat.entity.UserEntity
 
 @Dao
 interface DatabaseDao {
@@ -18,7 +19,7 @@ interface DatabaseDao {
     @Query("SELECT * FROM user_table LIMIT 1")
     fun readUserData() : LiveData<UserEntity>
 
-    // Add photos stuff
+    // add photos stuff
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addRestaurantImage(restaurantImage : RestaurantImageEntity)
 
@@ -28,7 +29,19 @@ interface DatabaseDao {
     @Query("Select MAX(id) + 1 from restaurant_image_table")
     fun getNextPictureId() : Int
 
+    // delete photos
     @Query("DELETE FROM restaurant_image_table WHERE id = :imageId")
     suspend fun deleteRestaurantImage(imageId : Int)
+
+    // favorite restaurants stuff
+    @Query("SELECT * FROM favorite_restaurants_table")
+    suspend fun readFavoriteRestaurants() : MutableList<FavoriteRestaurantsEntity>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFavoriteRestaurant(favoriteRestaurant : FavoriteRestaurantsEntity)
+
+    // delete favorite restaurant
+    @Delete
+    suspend fun deleteFavoriteRestaurant(favoriteRestaurant: FavoriteRestaurantsEntity)
 
 }

@@ -12,24 +12,26 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
+import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 import kotlin.collections.ArrayList
 
 class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
-    val dataSet = arrayListOf("alma", "korte", "csoki", "banan", "helloka")
 
     // retrofit test variable
     private lateinit var viewModel: MainViewModel
+    private lateinit var myDatabaseViewModel: MyDatabaseViewModel
 
     // flag that signals if the recycle view has reached the end or some arbitrary end position
     var hasStartedDataRetrieval = false
     var displayList: MutableList<Restaurant> = ArrayList()
+    var favoritiesList : MutableList<FavoriteRestaurantsEntity> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
+        myDatabaseViewModel = ViewModelProvider(this).get(MyDatabaseViewModel::class.java)
 
         requireActivity().invalidateOptionsMenu()
         setHasOptionsMenu(true)
@@ -58,13 +61,21 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val adapter = MainScreenRecyclerViewAdapter(displayList, this)
+        val adapter = MainScreenRecyclerViewAdapter(displayList, favoritiesList, this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
         // add listener for when the recycleview reaches the last couple of items
         // so we can start loading the next batch of data
         recyclerView.addOnScrollListener(getOnScrollListener())
+
+        myDatabaseViewModel.getFavoriteRestaurants()
+
+        myDatabaseViewModel.favoriteRestaurantsList.observe(requireActivity(), Observer{ favorities ->
+            favoritiesList.clear()
+            favoritiesList.addAll(favorities)
+            recyclerView.adapter!!.notifyDataSetChanged()
+        })
 
         viewModel.restaurantsFilteredList.observe(requireActivity(), Observer { response ->
             displayList.clear()
@@ -104,7 +115,30 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
     override fun onItemClick(position: Int) {
         val restaurant = displayList[position]
         viewModel.setSelectedRestaurant(restaurant)
+        var flag = false
+        myDatabaseViewModel.favoriteRestaurantsList.value!!.forEach {
+            Log.d("fav | res", "${it.id} | ${restaurant.id}")
+            if (it.id == restaurant.id) {
+                viewModel.selectedFavoriteRestaurant.value = it
+                flag = true
+                return@forEach
+            }
+        }
+        if (flag == false) {
+            viewModel.selectedFavoriteRestaurant.value = null
+        }
         findNavController().navigate(R.id.action_mainScreenNav_to_detailNav)
+    }
+
+    override fun addOrRemoveFavorites(position: Int, shouldAdd: Boolean) {
+        val restaurant = viewModel.convertRestaurantToFavoriteRestaurantEntity(displayList[position])
+        if (shouldAdd == true) {
+            viewModel.setSelectedFavoriteRestaurant(restaurant)
+            myDatabaseViewModel.addFavoriteRestaurant(restaurant)
+        }
+        else {
+            myDatabaseViewModel.deleteFavoriteRestaurant(restaurant)
+        }
     }
 
     private fun getOnScrollListener(): RecyclerView.OnScrollListener {
@@ -138,7 +172,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
     // search recyclerview
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)  {
         inflater.inflate(R.menu.search_menu, menu)
-        val menuItem = menu!!.findItem(R.id.actionSearch)
+        val menuItem = menu.findItem(R.id.actionSearch)
         val menuItemCity = menu.findItem(R.id.actionCities)
 
         if (menuItem != null) {

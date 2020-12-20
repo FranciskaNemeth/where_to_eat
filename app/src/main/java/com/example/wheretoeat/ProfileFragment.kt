@@ -1,18 +1,14 @@
 package com.example.wheretoeat
 
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.wheretoeat.data.MyDatabase
-import com.example.wheretoeat.data.UserEntity
+import com.example.wheretoeat.entity.UserEntity
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -113,7 +109,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_changes_menu, menu)
         //requireActivity().menuInflater.inflate(R.menu.save_changes_menu, menu)
-        val menuItem = menu!!.findItem(R.id.saveChanges)
+        val menuItem = menu.findItem(R.id.saveChanges)
 
         if (menuItem != null) {
             val checkButton = menuItem.actionView as AppCompatImageButton

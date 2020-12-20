@@ -10,12 +10,14 @@ import java.util.*
 import com.bumptech.glide.Glide
 import android.widget.ImageView
 import androidx.navigation.Navigation
+import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.model.Restaurant
 
-class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, private val clickListener: OnRestaurantItemClickListener
+class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, favoriteRestaurantsList : MutableList<FavoriteRestaurantsEntity>?, private val clickListener: OnRestaurantItemClickListener
 ) : RecyclerView.Adapter<MainScreenRecyclerViewAdapter.ViewHolder>(){
 
     private val dataList: MutableList<Restaurant>
+    private val favorities : MutableList<FavoriteRestaurantsEntity>?
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
@@ -31,7 +33,28 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, private va
         holder.restaurantName.setText(dataList[position].name)
         holder.price.setText(dataList[position].price.toString())
         holder.address.setText(dataList[position].address)
-        holder.favourite.setOnClickListener {}
+
+        if (checkIsFavorite(dataList[position]) == false) {
+            holder.favourite.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+            holder.favourite.setTag(R.drawable.ic_baseline_favorite_border_24)
+        }
+        else {
+            holder.favourite.setImageResource(R.drawable.favourite)
+            holder.favourite.setTag(R.drawable.favourite)
+        }
+
+        holder.favourite.setOnClickListener {
+            if (holder.favourite.getTag() == R.drawable.ic_baseline_favorite_border_24) {
+                holder.favourite.setImageResource(R.drawable.favourite)
+                holder.favourite.setTag(R.drawable.favourite)
+                clickListener.addOrRemoveFavorites(holder.adapterPosition, true)
+            }
+            else {
+                holder.favourite.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                holder.favourite.setTag(R.drawable.ic_baseline_favorite_border_24)
+                clickListener.addOrRemoveFavorites(holder.adapterPosition, false)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -58,10 +81,24 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, private va
 
     init {
         this.dataList = dataSet
+        this.favorities = favoriteRestaurantsList
+    }
+
+    fun checkIsFavorite(restaurant: Restaurant) : Boolean {
+        if (favorities != null) {
+            favorities.forEach() {
+                if (it.id == restaurant.id) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
 }
 
 interface OnRestaurantItemClickListener{
     fun onItemClick(position: Int)
+
+    fun addOrRemoveFavorites(position: Int, shouldAdd : Boolean)
 }

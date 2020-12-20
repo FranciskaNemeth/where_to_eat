@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.wheretoeat.data.RestaurantImageEntity
+import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.repository.Repository
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -79,7 +79,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
                 )
             }
             else {
-                startGallery();
+                startGallery()
             }
         }
 
@@ -100,7 +100,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
             recyclerView.adapter!!.notifyDataSetChanged()
         })
 
-        myDatabaseViewModel.getRestaurantImages(viewModel.selectedRestaurant.value!!.id)
+        myDatabaseViewModel.getRestaurantImages(viewModel.selectedRestaurantId)
 
         val drawable = GradientDrawable(
             GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(-0x7373730, -0x7373730)
@@ -122,7 +122,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
         //super.onActivityResult(requestCode, resultCode, data)
         //super method removed
         if (resultCode == RESULT_OK) {
-            if (requestCode == 1000 && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            if (requestCode == 1000 && resultCode == RESULT_OK && data != null && data.data != null) {
                 val returnUri: Uri? = data.data
                 val bitmapImage =
                     MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, returnUri)
@@ -139,12 +139,6 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
                         val restaurantImageEntity =
                             RestaurantImageEntity(rid, selectedRestaurant.id, imageByteArray)
                         myDatabaseViewModel.addRestaurantImage(restaurantImageEntity)
-
-                        // bevarjuk amig az uj kep, be nem szurodik az adatbazisba
-                        while (rid == myDatabaseViewModel.getNextPictureId()) {
-                            Thread.sleep(100)
-                        }
-                        myDatabaseViewModel.getRestaurantImages(selectedRestaurant.id)
                     }
                 }
             }

@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
+import com.example.wheretoeat.entity.RestaurantImageEntity
+import com.example.wheretoeat.entity.UserEntity
 
-@Database(entities = [UserEntity::class, RestaurantImageEntity::class], version = 2, exportSchema = false)
+@Database(entities = [UserEntity::class, RestaurantImageEntity::class, FavoriteRestaurantsEntity::class], version = 3, exportSchema = false)
 abstract class MyDatabase : RoomDatabase() {
 
     abstract fun userDao() : DatabaseDao

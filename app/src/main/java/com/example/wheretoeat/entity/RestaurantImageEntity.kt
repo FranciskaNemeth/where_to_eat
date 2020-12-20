@@ -1,4 +1,4 @@
-package com.example.wheretoeat.data
+package com.example.wheretoeat.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

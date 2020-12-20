@@ -1,24 +1,21 @@
 package com.example.wheretoeat.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
-import com.example.wheretoeat.MainViewModel
-import com.example.wheretoeat.MainViewModelFactory
 import com.example.wheretoeat.data.MyDatabase
-import com.example.wheretoeat.data.RestaurantImageEntity
-import com.example.wheretoeat.data.UserEntity
+import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
+import com.example.wheretoeat.entity.RestaurantImageEntity
+import com.example.wheretoeat.entity.UserEntity
 import com.example.wheretoeat.repository.MyDatabaseRepository
-import com.example.wheretoeat.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.lifecycle.ViewModelProvider
 
 class MyDatabaseViewModel(application: Application) : AndroidViewModel(application) {
     var readUserData : LiveData<UserEntity>
     var restaurantImages: MutableLiveData<MutableList<RestaurantImageEntity>> = MutableLiveData<MutableList<RestaurantImageEntity>>()
+    var favoriteRestaurantsList : MutableLiveData<MutableList<FavoriteRestaurantsEntity>> = MutableLiveData<MutableList<FavoriteRestaurantsEntity>>()
+
     private val repository : MyDatabaseRepository
-    lateinit var user : LiveData<UserEntity>
 
     init {
         val databaseDao = MyDatabase.getDatabase(application).userDao()
@@ -44,7 +41,7 @@ class MyDatabaseViewModel(application: Application) : AndroidViewModel(applicati
 
     fun addRestaurantImage(restaurantImageEntity: RestaurantImageEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addRestaurantImage(restaurantImageEntity)
+            restaurantImages.postValue(repository.addRestaurantImage(restaurantImageEntity))
         }
     }
 
@@ -61,6 +58,24 @@ class MyDatabaseViewModel(application: Application) : AndroidViewModel(applicati
     fun deleteRestaurantImageId(imageId : Int, rid : Int) {
         viewModelScope.launch(Dispatchers.IO) {
             restaurantImages.postValue(repository.deleteRestaurantImage(imageId, rid))
+        }
+    }
+
+    fun deleteFavoriteRestaurant(favoriteRestaurant: FavoriteRestaurantsEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteRestaurantsList.postValue(repository.deleteFavoriteRestaurant(favoriteRestaurant))
+        }
+    }
+
+    fun addFavoriteRestaurant(favoriteRestaurant: FavoriteRestaurantsEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteRestaurantsList.postValue(repository.addFavoriteRestaurant(favoriteRestaurant))
+        }
+    }
+
+    fun getFavoriteRestaurants() {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteRestaurantsList.postValue(repository.getFavoriteRestaurants())
         }
     }
 }

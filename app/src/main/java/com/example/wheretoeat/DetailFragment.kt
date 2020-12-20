@@ -2,6 +2,7 @@ package com.example.wheretoeat
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +14,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
+import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
+import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 
 class DetailFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
+    private lateinit var myDatabaseViewModel: MyDatabaseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,7 @@ class DetailFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
+        myDatabaseViewModel = ViewModelProvider(this).get(MyDatabaseViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -49,6 +55,32 @@ class DetailFragment : Fragment() {
         val addOrDeleteButton : ImageButton = view.findViewById(R.id.imageButtonAddPhoto)
         addOrDeleteButton.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_detailNav_to_addOrDeletePhotosNav)
+        }
+
+        val favoriteButton : ImageButton = view.findViewById(R.id.imageButtonFavourite)
+        val favRestId = viewModel.selectedFavoriteRestaurant.value?.id
+        Log.d("favRestId", "$favRestId")
+        if (favRestId != null ) {
+            favoriteButton.setImageResource(R.drawable.favourite)
+            favoriteButton.setTag(R.drawable.favourite)
+        }
+        else {
+            favoriteButton.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+            favoriteButton.setTag(R.drawable.ic_baseline_favorite_border_24)
+        }
+        favoriteButton.setOnClickListener {
+            val selectedRestaurant : Restaurant = viewModel.selectedRestaurant.value!!
+            val favRestaurant : FavoriteRestaurantsEntity = viewModel.convertRestaurantToFavoriteRestaurantEntity(selectedRestaurant)
+            if (favoriteButton.getTag() == R.drawable.favourite) {
+                myDatabaseViewModel.deleteFavoriteRestaurant(favRestaurant)
+                favoriteButton.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                favoriteButton.setTag(R.drawable.ic_baseline_favorite_border_24)
+            }
+            else {
+                myDatabaseViewModel.addFavoriteRestaurant(favRestaurant)
+                favoriteButton.setImageResource(R.drawable.favourite)
+                favoriteButton.setTag(R.drawable.favourite)
+            }
         }
 
         val restaurantName = view.findViewById<TextView>(R.id.textViewTitle)

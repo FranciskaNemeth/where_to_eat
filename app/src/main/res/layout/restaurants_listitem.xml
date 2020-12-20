@@ -74,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textViewTitle"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/favourite"
+        app:srcCompat="@drawable/ic_baseline_favorite_border_24"
         tools:ignore="ContentDescription" />
 
 

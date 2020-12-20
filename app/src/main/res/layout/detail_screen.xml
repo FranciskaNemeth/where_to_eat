@@ -109,7 +109,7 @@
         app:layout_constraintEnd_toStartOf="@+id/imageButtonAddPhoto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:srcCompat="@drawable/favourite"
+        app:srcCompat="@drawable/ic_baseline_favorite_border_24"
         tools:ignore="ContentDescription" />
 
     <ImageButton
