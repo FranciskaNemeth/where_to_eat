@@ -1,6 +1,9 @@
 package com.example.wheretoeat
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,7 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -22,6 +28,12 @@ import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 class DetailFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var myDatabaseViewModel: MyDatabaseViewModel
+
+    private lateinit var restaurantName : TextView
+    private lateinit var restaurantAddress : TextView
+    private lateinit var restaurantPhone : TextView
+    private lateinit var restaurantPrice : TextView
+    private lateinit var phoneButton : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,10 +95,23 @@ class DetailFragment : Fragment() {
             }
         }
 
-        val restaurantName = view.findViewById<TextView>(R.id.textViewTitle)
-        val restaurantAddress = view.findViewById<TextView>(R.id.textViewAddress)
-        val restaurantPhone = view.findViewById<TextView>(R.id.textViewPhone)
-        val restaurantPrice = view.findViewById<TextView>(R.id.textViewPrice)
+        restaurantName = view.findViewById<TextView>(R.id.textViewTitle)
+        restaurantAddress = view.findViewById<TextView>(R.id.textViewAddress)
+        restaurantPhone = view.findViewById<TextView>(R.id.textViewPhone)
+        restaurantPrice = view.findViewById<TextView>(R.id.textViewPrice)
+        phoneButton = view.findViewById(R.id.imageViewPhoneIcon)
+
+        phoneButton.setOnClickListener {
+            if (restaurantPhone.text.toString().isNotEmpty()) {
+                callRestaurant()
+            }
+        }
+
+        restaurantPhone.setOnClickListener {
+            if (restaurantPhone.text.toString().isNotEmpty()) {
+                callRestaurant()
+            }
+        }
 
         viewModel.selectedRestaurant.observe(requireActivity(), Observer { restaurant ->
             restaurantName.text = restaurant.name
@@ -94,5 +119,22 @@ class DetailFragment : Fragment() {
             restaurantPhone.text = restaurant.phone.take(10)
             restaurantPrice.text = restaurant.price.toString()
         })
+    }
+
+    fun callRestaurant() {
+        val phoneNumber : String = restaurantPhone.text.toString()
+        if (phoneNumber.isNotEmpty()) {
+            val intent = Intent(Intent.ACTION_CALL)
+            intent.data = Uri.parse("tel:$phoneNumber")
+
+            // permission request
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CALL_PHONE), 1)
+            }
+            else {
+                startActivity(intent)
+            }
+        }
     }
 }
