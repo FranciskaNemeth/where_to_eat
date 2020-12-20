@@ -57,4 +57,10 @@ class MyDatabaseViewModel(application: Application) : AndroidViewModel(applicati
     fun getNextPictureId(): Int {
         return repository.getNextPictureId()
     }
+
+    fun deleteRestaurantImageId(imageId : Int, rid : Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            restaurantImages.postValue(repository.deleteRestaurantImage(imageId, rid))
+        }
+    }
 }

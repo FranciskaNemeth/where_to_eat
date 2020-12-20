@@ -28,4 +28,7 @@ interface DatabaseDao {
     @Query("Select MAX(id) + 1 from restaurant_image_table")
     fun getNextPictureId() : Int
 
+    @Query("DELETE FROM restaurant_image_table WHERE id = :imageId")
+    suspend fun deleteRestaurantImage(imageId : Int)
+
 }

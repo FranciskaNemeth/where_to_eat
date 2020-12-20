@@ -152,8 +152,13 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
     }
 
     override fun onImageDeleteClick(position: Int) {
-        dataSet.removeAt(position)
-        recyclerView.adapter!!.notifyDataSetChanged()
+        val scope = CoroutineScope(Dispatchers.IO)
+        scope.launch {
+            val deleteImageId = myDatabaseViewModel.restaurantImages.value!![position].id
+            val rid = myDatabaseViewModel.restaurantImages.value!![position].rid
+
+            myDatabaseViewModel.deleteRestaurantImageId(deleteImageId, rid)
+        }
     }
 
     fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray? {

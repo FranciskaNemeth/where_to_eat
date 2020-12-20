@@ -28,4 +28,9 @@ class MyDatabaseRepository(private val databaseDao: DatabaseDao) {
     fun getNextPictureId(): Int {
         return databaseDao.getNextPictureId()
     }
+
+    suspend fun deleteRestaurantImage(imageId : Int, rid : Int) : MutableList<RestaurantImageEntity> {
+        databaseDao.deleteRestaurantImage(imageId)
+        return databaseDao.readRestaurantImages(rid)
+    }
 }
