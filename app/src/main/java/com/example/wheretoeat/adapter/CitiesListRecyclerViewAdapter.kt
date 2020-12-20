@@ -1,10 +1,11 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wheretoeat.R
 
 class CitiesListRecyclerViewAdapter(dataSet: MutableList<String>, private var clickListener: OnCityItemClickListener) : RecyclerView.Adapter<CitiesListRecyclerViewAdapter.ViewHolder>(){
 

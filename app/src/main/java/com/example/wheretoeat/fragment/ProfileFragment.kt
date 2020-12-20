@@ -1,4 +1,4 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.fragment
 
 import android.Manifest
 import android.app.Activity
@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
@@ -20,10 +19,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.wheretoeat.R
 import com.example.wheretoeat.entity.UserEntity
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 import com.google.android.material.snackbar.Snackbar
-import okhttp3.internal.notifyAll
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
@@ -162,7 +161,7 @@ class ProfileFragment : Fragment() {
         val userPhone = phoneEditText.text.toString()
         val userEmail = emailEditText.text.toString()
 
-        if (inputCheck(userName, userAddress, userPhone, userEmail, profileImageByteArray)) {
+        if (inputCheck(userName, userAddress, userPhone, userEmail)) {
             // create user object
             val user = UserEntity(1, userName, userAddress, userPhone, userEmail, profileImageByteArray)
 
@@ -183,7 +182,7 @@ class ProfileFragment : Fragment() {
         val userPhone = phoneEditText.text.toString()
         val userEmail = emailEditText.text.toString()
 
-        if (inputCheck(userName, userAddress, userPhone, userEmail, profileImageByteArray)) {
+        if (inputCheck(userName, userAddress, userPhone, userEmail)) {
             // create user object
             val user = UserEntity(1, userName, userAddress, userPhone, userEmail, profileImageByteArray)
 
@@ -198,8 +197,8 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun inputCheck(name: String, address: String, phone: String, email: String, byteArray: ByteArray) : Boolean{
-        if(name.isEmpty() || address.isEmpty() || phone.isEmpty() || email.isEmpty() || byteArray.isEmpty()) {
+    private fun inputCheck(name: String, address: String, phone: String, email: String) : Boolean{
+        if(name.isEmpty() || address.isEmpty() || phone.isEmpty() || email.isEmpty()) {
             return false
         }
 

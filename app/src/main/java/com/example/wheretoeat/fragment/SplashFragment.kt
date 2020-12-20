@@ -1,4 +1,4 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.fragment
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.wheretoeat.R
 import com.example.wheretoeat.repository.Repository
-import kotlinx.coroutines.*
-import java.util.*
+import com.example.wheretoeat.viewmodel.MainViewModel
+import com.example.wheretoeat.viewmodel.MainViewModelFactory
 
 class SplashFragment : Fragment(){
 

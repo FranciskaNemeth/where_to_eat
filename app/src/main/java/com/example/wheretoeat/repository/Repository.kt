@@ -1,11 +1,8 @@
 package com.example.wheretoeat.repository
 
-import android.util.Log
 import com.example.wheretoeat.api.RetrofitInstance
 import com.example.wheretoeat.model.CitiesList
 import com.example.wheretoeat.model.City
-import com.example.wheretoeat.model.Restaurant
-import java.lang.Error
 
 class Repository {
     suspend fun getPost(cityName : String) : City? {

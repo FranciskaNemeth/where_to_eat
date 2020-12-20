@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashNav"
-        android:name="com.example.wheretoeat.SplashFragment"
+        android:name="com.example.wheretoeat.fragment.SplashFragment"
         tools:layout="@layout/splash_screen">
         <action
             android:id="@+id/action_splashNav_to_mainScreenNav"
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/mainScreenNav"
-        android:name="com.example.wheretoeat.MainScreenFragment"
+        android:name="com.example.wheretoeat.fragment.MainScreenFragment"
         tools:layout="@layout/main_screen">
         <action
             android:id="@+id/action_mainScreenNav_to_profileNav"
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/profileNav"
-        android:name="com.example.wheretoeat.ProfileFragment"
+        android:name="com.example.wheretoeat.fragment.ProfileFragment"
         tools:layout="@layout/profile_screen">
         <action
             android:id="@+id/action_profileNav_to_mainScreenNav"
@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/favoriteNav"
-        android:name="com.example.wheretoeat.FavoriteRestaurantsFragment"
+        android:name="com.example.wheretoeat.fragment.FavoriteRestaurantsFragment"
         tools:layout="@layout/favorite_restaurants_screen">
 
         <action
@@ -52,7 +52,7 @@
 
     <fragment
         android:id="@+id/detailNav"
-        android:name="com.example.wheretoeat.DetailFragment"
+        android:name="com.example.wheretoeat.fragment.DetailFragment"
         tools:layout="@layout/detail_screen">
         <action
             android:id="@+id/action_detailNav_to_mapNav"
@@ -69,7 +69,7 @@
 
     <fragment
         android:id="@+id/addOrDeletePhotosNav"
-        android:name="com.example.wheretoeat.AddOrDeletePhotosFragment"
+        android:name="com.example.wheretoeat.fragment.AddOrDeletePhotosFragment"
         tools:layout="@layout/add_or_delete_photos_screen" />
 
 </navigation>

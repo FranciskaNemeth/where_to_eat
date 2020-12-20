@@ -1,12 +1,10 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.fragment
 
-import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,10 +13,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wheretoeat.*
+import com.example.wheretoeat.adapter.FavoriteRestaurantsRecyclerViewAdapter
+import com.example.wheretoeat.adapter.OnFavoriteRestaurantDeleteClickListener
+import com.example.wheretoeat.adapter.OnFavoriteRestaurantItemClickListener
 import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.entity.RestaurantImageEntity
-import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
+import com.example.wheretoeat.viewmodel.MainViewModel
+import com.example.wheretoeat.viewmodel.MainViewModelFactory
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

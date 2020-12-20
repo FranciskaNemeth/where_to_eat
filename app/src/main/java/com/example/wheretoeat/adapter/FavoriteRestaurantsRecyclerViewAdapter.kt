@@ -1,4 +1,4 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.wheretoeat.R
 import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.entity.RestaurantImageEntity
-import com.example.wheretoeat.model.Restaurant
 
 class FavoriteRestaurantsRecyclerViewAdapter (dataSet: MutableList<FavoriteRestaurantsEntity>,
                                               restaurantImageEntities:  MutableList<RestaurantImageEntity>,

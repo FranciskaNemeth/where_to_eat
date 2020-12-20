@@ -36,10 +36,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.map_screen)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        /*val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.mapView) as SupportMapFragment
-        mapFragment.getMapAsync(this)*/
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.mapView) as? SupportMapFragment
         mapFragment?.getMapAsync(this)

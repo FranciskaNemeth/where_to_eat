@@ -1,7 +1,6 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.fragment
 
 import android.Manifest
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,7 +9,6 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +20,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wheretoeat.*
+import com.example.wheretoeat.adapter.AddOrDeletePhotosRecyclerViewAdapter
+import com.example.wheretoeat.adapter.OnImageDeleteClickListener
 import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.repository.Repository
+import com.example.wheretoeat.viewmodel.MainViewModel
+import com.example.wheretoeat.viewmodel.MainViewModelFactory
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope

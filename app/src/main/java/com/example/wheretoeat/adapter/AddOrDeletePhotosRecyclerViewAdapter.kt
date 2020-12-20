@@ -1,15 +1,14 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.adapter
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import com.bumptech.glide.Glide
 import android.widget.ImageView
+import com.example.wheretoeat.R
 
 class AddOrDeletePhotosRecyclerViewAdapter(dataSet: ArrayList<ByteArray?>, private var clickListener: OnImageDeleteClickListener) : RecyclerView.Adapter<AddOrDeletePhotosRecyclerViewAdapter.ViewHolder>(){
 
@@ -26,7 +25,6 @@ class AddOrDeletePhotosRecyclerViewAdapter(dataSet: ArrayList<ByteArray?>, priva
             .placeholder(R.drawable.logo)
             .error(R.drawable.logo)
             .into(holder.image)
-        //holder.image.setImageBitmap(dataList[position])
         holder.delete.setOnClickListener {
             clickListener.onImageDeleteClick(holder.adapterPosition)
         }

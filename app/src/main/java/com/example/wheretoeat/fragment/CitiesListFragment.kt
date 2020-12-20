@@ -1,9 +1,8 @@
-package com.example.wheretoeat
+package com.example.wheretoeat.fragment
 
 import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
@@ -11,7 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wheretoeat.*
+import com.example.wheretoeat.adapter.CitiesListRecyclerViewAdapter
+import com.example.wheretoeat.adapter.OnCityItemClickListener
 import com.example.wheretoeat.repository.Repository
+import com.example.wheretoeat.viewmodel.MainViewModel
+import com.example.wheretoeat.viewmodel.MainViewModelFactory
 
 
 class CitiesListFragment : DialogFragment(), OnCityItemClickListener {
