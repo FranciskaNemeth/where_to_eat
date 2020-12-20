@@ -11,13 +11,18 @@ import com.bumptech.glide.Glide
 import android.widget.ImageView
 import androidx.navigation.Navigation
 import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
+import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.model.Restaurant
 
-class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, favoriteRestaurantsList : MutableList<FavoriteRestaurantsEntity>?, private val clickListener: OnRestaurantItemClickListener
+class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>,
+                                    favoriteRestaurantsList : MutableList<FavoriteRestaurantsEntity>?,
+                                    restaurantImageEntities:  MutableList<RestaurantImageEntity>,
+                                    private val clickListener: OnRestaurantItemClickListener
 ) : RecyclerView.Adapter<MainScreenRecyclerViewAdapter.ViewHolder>(){
 
     private val dataList: MutableList<Restaurant>
     private val favorities : MutableList<FavoriteRestaurantsEntity>?
+    private val restaurantImageEntities: MutableList<RestaurantImageEntity>
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
@@ -26,10 +31,20 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, favoriteRe
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Glide.with(holder.image.context).load(dataList[position].image_url)
-                .placeholder(R.drawable.logo)
-                .error(R.drawable.logo)
-                .into(holder.image)
+        val savedRestaurantImageData = getRestaurantImage(dataList[position].id)
+        if (savedRestaurantImageData == null) {
+            Glide.with(holder.image.context).load(dataList[position].image_url)
+                    .placeholder(R.drawable.logo)
+                    .error(R.drawable.logo)
+                    .into(holder.image)
+        }
+        else {
+            Glide.with(holder.image.context).load(savedRestaurantImageData)
+                    .placeholder(R.drawable.logo)
+                    .error(R.drawable.logo)
+                    .into(holder.image)
+        }
+
         holder.restaurantName.setText(dataList[position].name)
         holder.price.setText(dataList[position].price.toString())
         holder.address.setText(dataList[position].address)
@@ -82,6 +97,7 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, favoriteRe
     init {
         this.dataList = dataSet
         this.favorities = favoriteRestaurantsList
+        this.restaurantImageEntities = restaurantImageEntities
     }
 
     fun checkIsFavorite(restaurant: Restaurant) : Boolean {
@@ -93,6 +109,15 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, favoriteRe
             }
         }
         return false
+    }
+
+    fun getRestaurantImage(rid: Int): ByteArray? {
+        restaurantImageEntities.forEach {
+            if(it.rid == rid) {
+                return it.imageData
+            }
+        }
+        return null
     }
 
 }

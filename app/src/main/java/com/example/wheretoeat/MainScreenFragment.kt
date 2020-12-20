@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
+import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
@@ -32,6 +33,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
     var hasStartedDataRetrieval = false
     var displayList: MutableList<Restaurant> = ArrayList()
     var favoritiesList : MutableList<FavoriteRestaurantsEntity> = ArrayList()
+    val restaurantImageEntities: MutableList<RestaurantImageEntity> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +63,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val adapter = MainScreenRecyclerViewAdapter(displayList, favoritiesList, this)
+        val adapter = MainScreenRecyclerViewAdapter(displayList, favoritiesList, restaurantImageEntities, this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -97,6 +99,14 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
             alertDialog.create()
             alertDialog.show()
         })
+
+        myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer {
+            restaurantImageEntities.clear()
+            restaurantImageEntities.addAll(it)
+            recyclerView.adapter!!.notifyDataSetChanged()
+        })
+
+        myDatabaseViewModel.getAllRestaurantImages()
 
         val itemDecoration = DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
         val drawable = GradientDrawable(

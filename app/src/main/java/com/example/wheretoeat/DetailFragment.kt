@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
@@ -34,6 +35,7 @@ class DetailFragment : Fragment() {
     private lateinit var restaurantPhone : TextView
     private lateinit var restaurantPrice : TextView
     private lateinit var phoneButton : ImageView
+    private lateinit var restaurantImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,7 @@ class DetailFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
-        myDatabaseViewModel = ViewModelProvider(this).get(MyDatabaseViewModel::class.java)
+        myDatabaseViewModel = ViewModelProvider(requireActivity()).get(MyDatabaseViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -100,6 +102,7 @@ class DetailFragment : Fragment() {
         restaurantPhone = view.findViewById<TextView>(R.id.textViewPhone)
         restaurantPrice = view.findViewById<TextView>(R.id.textViewPrice)
         phoneButton = view.findViewById(R.id.imageViewPhoneIcon)
+        restaurantImageView = view.findViewById(R.id.imageView)
 
         phoneButton.setOnClickListener {
             if (restaurantPhone.text.toString().isNotEmpty()) {
@@ -119,6 +122,27 @@ class DetailFragment : Fragment() {
             restaurantPhone.text = restaurant.phone.take(10)
             restaurantPrice.text = restaurant.price.toString()
         })
+
+        myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer { restaurantList ->
+
+            view.post {
+                if(restaurantList.isNullOrEmpty()) {
+                    Glide.with(restaurantImageView.context).load(viewModel.selectedRestaurant.value!!.image_url)
+                            .placeholder(R.drawable.logo)
+                            .error(R.drawable.logo)
+                            .into(restaurantImageView)
+                }
+                else {
+                    Glide.with(restaurantImageView.context).load(restaurantList[0].imageData)
+                            .placeholder(R.drawable.logo)
+                            .error(R.drawable.logo)
+                            .into(restaurantImageView)
+                }
+
+            }
+        })
+
+        myDatabaseViewModel.getRestaurantImages(viewModel.selectedRestaurantId)
     }
 
     fun callRestaurant() {

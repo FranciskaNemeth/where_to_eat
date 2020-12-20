@@ -46,7 +46,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
         val repository = Repository()
         val viewModelFactory = MainViewModelFactory(repository)
 
-        myDatabaseViewModel = ViewModelProvider(this).get(MyDatabaseViewModel::class.java)
+        myDatabaseViewModel = ViewModelProvider(requireActivity()).get(MyDatabaseViewModel::class.java)
         viewModel =
             ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
 
@@ -92,7 +92,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
             DividerItemDecoration.VERTICAL
         )
 
-        myDatabaseViewModel.restaurantImages.observe(viewLifecycleOwner, Observer { restaurantList ->
+        myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer { restaurantList ->
             dataSet.clear()
             restaurantList.forEach { restaurantImageEntity ->
                 dataSet.add(restaurantImageEntity.imageData)

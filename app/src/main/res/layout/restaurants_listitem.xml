@@ -12,13 +12,12 @@
         android:id="@+id/textViewPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/buttonBetween8"
         android:layout_marginEnd="@dimen/global_margin24"
+        android:layout_marginBottom="8dp"
         android:text="@string/price"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewAddress" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/base_avatar"
@@ -38,8 +37,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/buttonBetween8"
-        android:layout_marginTop="@dimen/buttonBetween16"
+        android:layout_marginTop="@dimen/buttonBetween8"
         android:layout_marginEnd="@dimen/buttonBetween8"
+        android:layout_marginBottom="@dimen/buttonBetween8"
         android:paddingBottom="@dimen/buttonBetween8"
         android:text="@string/title"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -55,10 +55,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/buttonBetween8"
-        android:layout_marginEnd="@dimen/global_margin24"
+        android:layout_marginEnd="48dp"
         android:text="@string/address"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewPrice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/base_avatar"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
@@ -69,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/buttonBetween8"
         android:layout_marginEnd="@dimen/global_margin24"
+        android:layout_marginBottom="@dimen/buttonBetween8"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/textViewPrice"
         app:layout_constraintEnd_toEndOf="parent"

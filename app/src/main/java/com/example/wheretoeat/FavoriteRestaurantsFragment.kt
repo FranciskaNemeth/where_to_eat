@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
+import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.model.Restaurant
 import com.example.wheretoeat.repository.Repository
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
@@ -31,6 +32,7 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
     // flag that signals if the recycle view has reached the end or some arbitrary end position
     var hasStartedDataRetrieval = false
     var displayList: MutableList<FavoriteRestaurantsEntity> = ArrayList()
+    val restaurantImageEntities: MutableList<RestaurantImageEntity> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,7 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
         viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
 
-        myDatabaseViewModel = ViewModelProvider(this).get(MyDatabaseViewModel::class.java)
+        myDatabaseViewModel = ViewModelProvider(requireActivity()).get(MyDatabaseViewModel::class.java)
 
         requireActivity().invalidateOptionsMenu()
         setHasOptionsMenu(true)
@@ -61,7 +63,7 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        val adapter = FavoriteRestaurantsRecyclerViewAdapter(displayList, this, this)
+        val adapter = FavoriteRestaurantsRecyclerViewAdapter(displayList, restaurantImageEntities, this, this)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -72,6 +74,14 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
         })
 
         myDatabaseViewModel.getFavoriteRestaurants()
+
+        myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer {
+            restaurantImageEntities.clear()
+            restaurantImageEntities.addAll(it)
+            recyclerView.adapter!!.notifyDataSetChanged()
+        })
+
+        myDatabaseViewModel.getAllRestaurantImages()
 
         val itemDecoration = DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
         val drawable = GradientDrawable(

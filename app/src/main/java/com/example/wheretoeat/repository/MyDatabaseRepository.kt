@@ -50,4 +50,8 @@ class MyDatabaseRepository(private val databaseDao: DatabaseDao) {
     suspend fun getFavoriteRestaurants() : MutableList<FavoriteRestaurantsEntity> {
         return databaseDao.readFavoriteRestaurants()
     }
+
+    suspend fun getAllRestaurantImages(): MutableList<RestaurantImageEntity> {
+        return databaseDao.readAllRestaurantImages()
+    }
 }

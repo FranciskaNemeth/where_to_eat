@@ -23,8 +23,11 @@ interface DatabaseDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addRestaurantImage(restaurantImage : RestaurantImageEntity)
 
-    @Query("SELECT * FROM restaurant_image_table WHERE rid = :restaurantId")
+    @Query("SELECT * FROM restaurant_image_table WHERE rid = :restaurantId ORDER by id DESC")
     suspend fun readRestaurantImages(restaurantId: Int) : MutableList<RestaurantImageEntity>
+
+    @Query("SELECT MAX(id) as id, rid, imageData FROM restaurant_image_table GROUP by rid")
+    suspend fun readAllRestaurantImages() : MutableList<RestaurantImageEntity>
 
     @Query("Select MAX(id) + 1 from restaurant_image_table")
     fun getNextPictureId() : Int

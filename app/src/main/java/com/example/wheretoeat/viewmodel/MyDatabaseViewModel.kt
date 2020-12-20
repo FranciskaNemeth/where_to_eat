@@ -78,4 +78,10 @@ class MyDatabaseViewModel(application: Application) : AndroidViewModel(applicati
             favoriteRestaurantsList.postValue(repository.getFavoriteRestaurants())
         }
     }
+
+    fun getAllRestaurantImages() {
+        viewModelScope.launch(Dispatchers.IO) {
+            restaurantImages.postValue(repository.getAllRestaurantImages())
+        }
+    }
 }
