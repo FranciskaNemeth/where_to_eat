@@ -2,9 +2,7 @@ package com.example.wheretoeat.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.wheretoeat.data.DatabaseDao
-import com.example.wheretoeat.data.MyDatabase
-import com.example.wheretoeat.data.UserEntity
+import com.example.wheretoeat.data.*
 
 class MyDatabaseRepository(private val databaseDao: DatabaseDao) {
     var readUserData : LiveData<UserEntity> = databaseDao.readUserData()
@@ -17,5 +15,17 @@ class MyDatabaseRepository(private val databaseDao: DatabaseDao) {
     suspend fun updateUser(user: UserEntity) {
         databaseDao.updateUser(user)
         readUserData  = databaseDao.readUserData()
+    }
+
+    suspend fun addRestaurantImage(restaurantImage: RestaurantImageEntity) {
+        databaseDao.addRestaurantImage(restaurantImage)
+    }
+
+    suspend fun getRestaurantImages(rid: Int) : MutableList<RestaurantImageEntity> {
+        return databaseDao.readRestaurantImages(rid)
+    }
+
+    fun getNextPictureId(): Int {
+        return databaseDao.getNextPictureId()
     }
 }

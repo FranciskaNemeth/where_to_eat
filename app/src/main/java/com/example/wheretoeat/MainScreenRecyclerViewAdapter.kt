@@ -24,9 +24,9 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>, private va
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Glide.with(holder.image.context).load("https://demjencascade.hu/site/uploads/2020/05/110719-cc-ss-christmas-presents-generic-img.jpg")
+        Glide.with(holder.image.context).load(dataList[position].image_url)
                 .placeholder(R.drawable.logo)
-                .error(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.logo)
                 .into(holder.image)
         holder.restaurantName.setText(dataList[position].name)
         holder.price.setText(dataList[position].price.toString())

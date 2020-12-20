@@ -1,17 +1,19 @@
 package com.example.wheretoeat
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import com.bumptech.glide.Glide
 import android.widget.ImageView
 
-class AddOrDeletePhotosRecyclerViewAdapter(dataSet: ArrayList<String>) : RecyclerView.Adapter<AddOrDeletePhotosRecyclerViewAdapter.ViewHolder>(){
+class AddOrDeletePhotosRecyclerViewAdapter(dataSet: ArrayList<ByteArray?>, private var clickListener: OnImageDeleteClickListener) : RecyclerView.Adapter<AddOrDeletePhotosRecyclerViewAdapter.ViewHolder>(){
 
-    private val dataList: ArrayList<String>
+    private val dataList:ArrayList<ByteArray?>
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view: View = LayoutInflater.from(viewGroup.context)
@@ -20,11 +22,14 @@ class AddOrDeletePhotosRecyclerViewAdapter(dataSet: ArrayList<String>) : Recycle
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Glide.with(holder.image.context).load("https://demjencascade.hu/site/uploads/2020/05/110719-cc-ss-christmas-presents-generic-img.jpg")
+        Glide.with(holder.image.context).load(dataList[position])
             .placeholder(R.drawable.logo)
             .error(R.drawable.logo)
             .into(holder.image)
-        holder.delete.setOnClickListener {}
+        //holder.image.setImageBitmap(dataList[position])
+        holder.delete.setOnClickListener {
+            clickListener.onImageDeleteClick(holder.adapterPosition)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -32,17 +37,16 @@ class AddOrDeletePhotosRecyclerViewAdapter(dataSet: ArrayList<String>) : Recycle
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var image: ImageView
-        var delete: ImageButton
-
-        init {
-            image = itemView.findViewById(R.id.imageViewPhoto)
-            delete = itemView.findViewById(R.id.imageButtonDeletePhoto)
-        }
+        var image: ImageView = itemView.findViewById(R.id.imageViewPhoto)
+        var delete: ImageButton = itemView.findViewById(R.id.imageButtonDeletePhoto)
     }
 
     init {
         this.dataList = dataSet
     }
 
+}
+
+interface OnImageDeleteClickListener{
+    fun onImageDeleteClick(position: Int)
 }
