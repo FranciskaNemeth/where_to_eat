@@ -1,5 +1,6 @@
 package com.example.wheretoeat.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,5 +11,7 @@ data class UserEntity (
     val userName : String,
     val address : String,
     val phoneNumber : String,
-    val email : String
+    val email : String,
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    val imageData : ByteArray
 )

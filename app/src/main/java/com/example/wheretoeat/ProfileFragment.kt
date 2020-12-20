@@ -1,16 +1,32 @@
 package com.example.wheretoeat
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.widget.EditText
-import androidx.fragment.app.Fragment
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.wheretoeat.entity.UserEntity
 import com.example.wheretoeat.viewmodel.MyDatabaseViewModel
 import com.google.android.material.snackbar.Snackbar
+import okhttp3.internal.notifyAll
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+
 
 class ProfileFragment : Fragment() {
     private lateinit var myDatabaseViewModel: MyDatabaseViewModel
@@ -18,6 +34,9 @@ class ProfileFragment : Fragment() {
     private lateinit var addressEditText : EditText
     private lateinit var phoneEditText : EditText
     private lateinit var emailEditText : EditText
+    private lateinit var profilePic : ImageView
+    private lateinit var profileImageByteArray: ByteArray
+    private lateinit var favRestaurantsList : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,24 +50,107 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.profile_screen, container, false)
 
-        myDatabaseViewModel = ViewModelProvider(this).get(MyDatabaseViewModel::class.java)
+        myDatabaseViewModel = ViewModelProvider(requireActivity()).get(MyDatabaseViewModel::class.java)
 
-        userNameEditText = view.findViewById<EditText>(R.id.textInputEditTextName)
-        addressEditText = view.findViewById<EditText>(R.id.textInputEditTextAddress)
-        phoneEditText = view.findViewById<EditText>(R.id.textInputEditTextPhone)
-        emailEditText = view.findViewById<EditText>(R.id.textInputEditTextEmail)
+        userNameEditText = view.findViewById(R.id.textInputEditTextName)
+        addressEditText = view.findViewById(R.id.textInputEditTextAddress)
+        phoneEditText = view.findViewById(R.id.textInputEditTextPhone)
+        emailEditText = view.findViewById(R.id.textInputEditTextEmail)
+        profilePic = view.findViewById(R.id.imageViewProfilePic)
+        favRestaurantsList = view.findViewById(R.id.textViewFavRestaurants)
 
         myDatabaseViewModel.readUserData.observe(viewLifecycleOwner, Observer { user ->
             if (user != null) {
-                userNameEditText.setText(user.userName)
-                addressEditText.setText( user.address)
-                phoneEditText.setText(user.phoneNumber)
-                emailEditText.setText(user.email)
+                view.post {
+                    userNameEditText.setText(user.userName)
+                    addressEditText.setText(user.address)
+                    phoneEditText.setText(user.phoneNumber)
+                    emailEditText.setText(user.email)
+                    Glide.with(profilePic.context).load(user.imageData)
+                            .placeholder(R.drawable.logo)
+                            .error(R.drawable.logo)
+                            .into(profilePic)
+                }
             }
-
         })
 
+        Log.d("muki out", "${myDatabaseViewModel.favoriteRestaurantsList.value}")
+        myDatabaseViewModel.favoriteRestaurantsList.observe(requireActivity(), Observer { restaurantList ->
+            Log.d("muki", "$restaurantList")
+            view?.post {
+                var favoriteRestaurantsTextFieldData = ""
+
+                restaurantList.forEach { favRestEntity ->
+                    favoriteRestaurantsTextFieldData += favRestEntity.name + "\n"
+                }
+                favRestaurantsList.text = favoriteRestaurantsTextFieldData
+            }
+        })
+
+        profilePic.setOnClickListener {
+            if(ActivityCompat.checkSelfPermission(
+                            requireActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED)
+            {
+                requestPermissions(
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        2000
+                )
+            }
+            else {
+                startGallery()
+            }
+        }
+
         return view
+    }
+
+    private fun startGallery() {
+        val cameraIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        cameraIntent.type = "image/*"
+        if (cameraIntent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(cameraIntent, 1000)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        //super.onActivityResult(requestCode, resultCode, data)
+        //super method removed
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 1000 && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+                val returnUri: Uri? = data.data
+                val bitmapImage =
+                        MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, returnUri)
+
+                val imageByteArray = convertBitmapToByteArray(bitmapImage)
+
+                if(imageByteArray != null) { // selectedrestaurant should not be null on this fragment, EVER
+                    profileImageByteArray = imageByteArray
+                    view?.post {
+                        Glide.with(profilePic.context).load(imageByteArray)
+                                .placeholder(R.drawable.logo)
+                                .error(R.drawable.logo)
+                                .into(profilePic)
+                    }
+                }
+            }
+        }
+    }
+
+    fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray? {
+        var baos: ByteArrayOutputStream? = null
+        return try {
+            baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 35, baos)
+            baos.toByteArray()
+        } finally {
+            if (baos != null) {
+                try {
+                    baos.close()
+                } catch (e: IOException) { }
+            }
+        }
     }
 
     override fun onStart() {
@@ -62,9 +164,9 @@ class ProfileFragment : Fragment() {
         val userPhone = phoneEditText.text.toString()
         val userEmail = emailEditText.text.toString()
 
-        if (inputCheck(userName, userAddress, userPhone, userEmail)) {
+        if (inputCheck(userName, userAddress, userPhone, userEmail, profileImageByteArray)) {
             // create user object
-            val user = UserEntity(1, userName, userAddress, userPhone, userEmail)
+            val user = UserEntity(1, userName, userAddress, userPhone, userEmail, profileImageByteArray)
 
             // add data to database
             myDatabaseViewModel.addUser(user)
@@ -83,9 +185,9 @@ class ProfileFragment : Fragment() {
         val userPhone = phoneEditText.text.toString()
         val userEmail = emailEditText.text.toString()
 
-        if (inputCheck(userName, userAddress, userPhone, userEmail)) {
+        if (inputCheck(userName, userAddress, userPhone, userEmail, profileImageByteArray)) {
             // create user object
-            val user = UserEntity(1, userName, userAddress, userPhone, userEmail)
+            val user = UserEntity(1, userName, userAddress, userPhone, userEmail, profileImageByteArray)
 
             // update data in database
             myDatabaseViewModel.updateUser(user)
@@ -98,8 +200,8 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun inputCheck(name : String, address : String, phone : String, email : String) : Boolean{
-        if(name.isEmpty() || address.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+    private fun inputCheck(name: String, address: String, phone: String, email: String, byteArray: ByteArray) : Boolean{
+        if(name.isEmpty() || address.isEmpty() || phone.isEmpty() || email.isEmpty() || byteArray.isEmpty()) {
             return false
         }
 

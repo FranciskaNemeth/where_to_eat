@@ -8,7 +8,7 @@ import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.entity.UserEntity
 
-@Database(entities = [UserEntity::class, RestaurantImageEntity::class, FavoriteRestaurantsEntity::class], version = 3, exportSchema = false)
+@Database(entities = [UserEntity::class, RestaurantImageEntity::class, FavoriteRestaurantsEntity::class], version = 4, exportSchema = false)
 abstract class MyDatabase : RoomDatabase() {
 
     abstract fun userDao() : DatabaseDao

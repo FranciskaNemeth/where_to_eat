@@ -41,7 +41,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel =
                 ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
-        myDatabaseViewModel = ViewModelProvider(this).get(MyDatabaseViewModel::class.java)
+        myDatabaseViewModel = ViewModelProvider(requireActivity()).get(MyDatabaseViewModel::class.java)
 
         requireActivity().invalidateOptionsMenu()
         setHasOptionsMenu(true)
