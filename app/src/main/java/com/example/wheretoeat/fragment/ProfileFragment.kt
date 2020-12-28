@@ -58,6 +58,7 @@ class ProfileFragment : Fragment() {
         profilePic = view.findViewById(R.id.imageViewProfilePic)
         favRestaurantsList = view.findViewById(R.id.textViewFavRestaurants)
 
+        // displaying user data on fragment
         myDatabaseViewModel.readUserData.observe(viewLifecycleOwner, Observer { user ->
             if (user != null) {
                 view.post {
@@ -73,6 +74,7 @@ class ProfileFragment : Fragment() {
             }
         })
 
+        // displaying user's favorite restaurants names
         myDatabaseViewModel.favoriteRestaurantsList.observe(requireActivity(), Observer { restaurantList ->
             view?.post {
                 var favoriteRestaurantsTextFieldData = ""
@@ -84,6 +86,7 @@ class ProfileFragment : Fragment() {
             }
         })
 
+        // opening gallery for changing the profile picture of the user
         profilePic.setOnClickListener {
             if(ActivityCompat.checkSelfPermission(
                             requireActivity(),
@@ -111,19 +114,25 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    // processing and uploading selected image to the database
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
         //super method removed
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1000 && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+                // getting the image uri
                 val returnUri: Uri? = data.data
+
+                // converting image to bitmap
                 val bitmapImage =
                         MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, returnUri)
 
+                // converting bitmap to bytearray
                 val imageByteArray = convertBitmapToByteArray(bitmapImage)
 
-                if(imageByteArray != null) { // selectedrestaurant should not be null on this fragment, EVER
+                if(imageByteArray != null) {
                     profileImageByteArray = imageByteArray
+                    // load image in profilePic imageview
                     view?.post {
                         Glide.with(profilePic.context).load(imageByteArray)
                                 .placeholder(R.drawable.logo)
@@ -135,6 +144,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    // converting bitmap to bytearray
     fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray? {
         var baos: ByteArrayOutputStream? = null
         return try {
@@ -155,6 +165,7 @@ class ProfileFragment : Fragment() {
         requireActivity().setTitle("Profile")
     }
 
+    // inserting user data and saving it to database
     private fun insertUserToDatabase() {
         val userName = userNameEditText.text.toString()
         val userAddress = addressEditText.text.toString()
@@ -176,6 +187,7 @@ class ProfileFragment : Fragment() {
 
     }
 
+    // updating user data and saving it to database
     private fun updateUser() {
         val userName = userNameEditText.text.toString()
         val userAddress = addressEditText.text.toString()
@@ -197,6 +209,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    // checking if text fields are not empty
     private fun inputCheck(name: String, address: String, phone: String, email: String) : Boolean{
         if(name.isEmpty() || address.isEmpty() || phone.isEmpty() || email.isEmpty()) {
             return false
@@ -205,6 +218,7 @@ class ProfileFragment : Fragment() {
         return true
     }
 
+    // check menu icon on appbar for committing changes on profile screen
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_changes_menu, menu)
         //requireActivity().menuInflater.inflate(R.menu.save_changes_menu, menu)

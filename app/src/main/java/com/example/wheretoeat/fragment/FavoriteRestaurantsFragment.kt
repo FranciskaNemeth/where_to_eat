@@ -32,8 +32,6 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
     private lateinit var viewModel: MainViewModel
     private lateinit var myDatabaseViewModel: MyDatabaseViewModel
 
-    // flag that signals if the recycle view has reached the end or some arbitrary end position
-    var hasStartedDataRetrieval = false
     var displayList: MutableList<FavoriteRestaurantsEntity> = ArrayList()
     val restaurantImageEntities: MutableList<RestaurantImageEntity> = ArrayList()
 
@@ -70,6 +68,7 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
+        // displaying the favorite restaurants in the recyclerview
         myDatabaseViewModel.favoriteRestaurantsList.observe(viewLifecycleOwner, Observer { restaurantList ->
             displayList.clear()
             displayList.addAll(restaurantList)
@@ -78,6 +77,7 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
 
         myDatabaseViewModel.getFavoriteRestaurants()
 
+        // displaying the favorite restaurants images in the recyclerview
         myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer {
             restaurantImageEntities.clear()
             restaurantImageEntities.addAll(it)
@@ -100,12 +100,14 @@ class FavoriteRestaurantsFragment : Fragment(), OnFavoriteRestaurantItemClickLis
         requireActivity().setTitle("Favorite Restaurants")
     }
 
+    // navigating to a favorite restaurant detail page
     override fun onItemClick(position: Int) {
         val restaurant = displayList[position]
         viewModel.setSelectedFavoriteRestaurant(restaurant)
         findNavController().navigate(R.id.action_favoriteNav_to_detailNav)
     }
 
+    // removing a restaurant from favorites
     override fun onFavoriteRestaurantDeleteClick(position: Int) {
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {

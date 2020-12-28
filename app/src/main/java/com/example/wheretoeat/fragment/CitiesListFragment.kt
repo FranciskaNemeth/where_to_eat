@@ -46,6 +46,7 @@ class CitiesListFragment : DialogFragment(), OnCityItemClickListener {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
 
+        // if there are errors regarding the API, an alertdialog is displayed
         viewModel.error.observe(requireActivity(), Observer { result ->
             val alertDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             alertDialog.setTitle(result.toString())
@@ -69,6 +70,7 @@ class CitiesListFragment : DialogFragment(), OnCityItemClickListener {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
+        // listening for citieslist change and updating the recyclerview with the searched cities list
         viewModel.citiesFilteredList.observe(requireActivity(), { response ->
             displayList.clear()
             displayList.addAll(response)
@@ -83,6 +85,7 @@ class CitiesListFragment : DialogFragment(), OnCityItemClickListener {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
+                    // filtering cities based on user search
                     viewModel.filterCities(newText)
                 }
                 return false
@@ -99,6 +102,7 @@ class CitiesListFragment : DialogFragment(), OnCityItemClickListener {
         recyclerView.addItemDecoration(itemDecoration)
     }
 
+    // when clicked on an item the restaurants in the selected city are loaded
     override fun onItemClick(position: Int) {
         cityName = this.displayList[position]
         viewModel.getPost(cityName)

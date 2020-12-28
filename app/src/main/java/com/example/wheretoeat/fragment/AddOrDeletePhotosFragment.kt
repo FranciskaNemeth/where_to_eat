@@ -95,6 +95,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
             DividerItemDecoration.VERTICAL
         )
 
+        // waiting for restaurant images to be loaded and displaying them in the recyclerview
         myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer { restaurantList ->
             dataSet.clear()
             restaurantList.forEach { restaurantImageEntity ->
@@ -103,6 +104,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
             recyclerView.adapter!!.notifyDataSetChanged()
         })
 
+        // requests selected restaurant images
         myDatabaseViewModel.getRestaurantImages(viewModel.selectedRestaurantId)
 
         val drawable = GradientDrawable(
@@ -121,20 +123,27 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
         }
     }
 
+    // processing and uploading selected image to the database
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //super.onActivityResult(requestCode, resultCode, data)
         //super method removed
         if (resultCode == RESULT_OK) {
             if (requestCode == 1000 && resultCode == RESULT_OK && data != null && data.data != null) {
+                // getting the image uri
                 val returnUri: Uri? = data.data
+
+                // converting image to bitmap
                 val bitmapImage =
                     MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, returnUri)
 
+                // converting bitmap to bytearray
                 val imageByteArray = convertBitmapToByteArray(bitmapImage)
 
                 val selectedRestaurant = viewModel.selectedRestaurant.value
 
                 if(imageByteArray != null && selectedRestaurant != null) { // selectedrestaurant should not be null on this fragment, EVER
+                    /* adding image on a different thread(threadsafe uploading) asynchronously
+                    *  "generating" next picture id and adding the picture to database */
                     val scope = CoroutineScope(Dispatchers.IO)
                     scope.launch {
                         val rid = myDatabaseViewModel.getNextPictureId()
@@ -147,6 +156,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
         }
     }
 
+    // deleting selected image from database
     override fun onImageDeleteClick(position: Int) {
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
@@ -157,6 +167,7 @@ class AddOrDeletePhotosFragment : Fragment(), OnImageDeleteClickListener {
         }
     }
 
+    // converting bitmap to bytearray
     fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray? {
         var baos: ByteArrayOutputStream? = null
         return try {

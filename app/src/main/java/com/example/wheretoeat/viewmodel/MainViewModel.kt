@@ -26,8 +26,10 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     val selectedFavoriteRestaurant : MutableLiveData<FavoriteRestaurantsEntity> = MutableLiveData()
     var selectedRestaurantId by Delegates.notNull<Int>()
 
+    // getting restaurants list for a city
     fun getPost(cityName : String) {
         this.cityName = cityName
+        // using coroutine for loading data asynchronously
         viewModelScope.launch {
             val response : City? = repository.getPost(cityName)
             if (response == null) {
@@ -48,8 +50,10 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    // getting restaurants for given page and city
     fun getRestaurantsPaginated(cityName: String, page:Int) {
         this.cityName = cityName
+        // using coroutine for loading data asynchronously
         viewModelScope.launch {
             val response : City? = repository.getRestaurantsPaginated(cityName, page)
             if(response == null) {
@@ -64,7 +68,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    // getting cities list
     fun getPostCities() {
+        // using coroutine for loading data asynchronously
         viewModelScope.launch {
             val response : CitiesList? = repository.getPostCities()
 
@@ -78,6 +84,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         }
     }
 
+    // filtering restaurants by their names
     fun filter(searchText : String?) {
         lastSearchText = searchText
         val arrayList : ArrayList<Restaurant> = ArrayList()
@@ -95,6 +102,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         restaurantsFilteredList.value = arrayList
     }
 
+    // filtering cities by their names
     fun filterCities(searchText : String?) {
         val arrayList : ArrayList<String> = ArrayList()
         if (searchText != null && searchText.isNotEmpty() && citiesResponse.value != null) {
@@ -111,17 +119,20 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         citiesFilteredList.value = arrayList
     }
 
+    // saving selected restaurant from recyclerview
     fun setSelectedRestaurant(restaurant: Restaurant) {
         selectedRestaurant.value = restaurant
         selectedRestaurantId = restaurant.id
     }
 
+    // saving selected favorite restaurant from recyclerview
     fun setSelectedFavoriteRestaurant(favoriteRestaurant: FavoriteRestaurantsEntity) {
         selectedFavoriteRestaurant.value = favoriteRestaurant
         selectedRestaurantId = favoriteRestaurant.id
         selectedRestaurant.value = convertFavoriteRestaurantEntityToRestaurant(favoriteRestaurant)
     }
 
+    // converting a restaurant to favorite restaurant(dislike case)
     fun convertRestaurantToFavoriteRestaurantEntity(restaurant : Restaurant) : FavoriteRestaurantsEntity {
         return FavoriteRestaurantsEntity(
                 restaurant.id,
@@ -142,6 +153,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         )
     }
 
+    // converting favorite restaurant to restaurant(like case)
     fun convertFavoriteRestaurantEntityToRestaurant(favoriteRestaurant : FavoriteRestaurantsEntity) : Restaurant {
         return Restaurant(
                 favoriteRestaurant.id,

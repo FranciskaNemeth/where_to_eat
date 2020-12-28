@@ -116,6 +116,7 @@ class DetailFragment : Fragment() {
             }
         }
 
+        // displaying the selected restaurant data on the fragment
         viewModel.selectedRestaurant.observe(requireActivity(), Observer { restaurant ->
             restaurantName.text = restaurant.name
             restaurantAddress.text = restaurant.address
@@ -123,8 +124,10 @@ class DetailFragment : Fragment() {
             restaurantPrice.text = restaurant.price.toString()
         })
 
+        // displaying the latest restaurant profile picture
         myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer { restaurantList ->
-
+            /* displaying photo on the main thread: if there isn't any image saved in the database
+            *  the image from the API will be displayed, or a placeholder */
             view.post {
                 if(restaurantList.isNullOrEmpty()) {
                     Glide.with(restaurantImageView.context).load(viewModel.selectedRestaurant.value!!.image_url)

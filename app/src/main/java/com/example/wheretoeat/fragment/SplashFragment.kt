@@ -34,7 +34,7 @@ class SplashFragment : Fragment(){
             savedInstanceState: Bundle?
     ): View? {
 
-
+        // navigating to main screen when restaurants for selected default city are received from API
         viewModel.myResponse.observe(requireActivity(), Observer { _ ->
             view?.post {
                 findNavController().navigate(R.id.action_splashNav_to_mainScreenNav)
@@ -43,6 +43,7 @@ class SplashFragment : Fragment(){
 
         viewModel.getPost("Dallas")
 
+        // if there are errors regarding the API, an alertdialog is displayed
         viewModel.error.observe(requireActivity(), Observer { result ->
             view?.post {
                 val alertDialog = AlertDialog.Builder(requireContext())
@@ -58,14 +59,6 @@ class SplashFragment : Fragment(){
                 alertDialog.show()
             }
         })
-
-        /*Timer().schedule(object : TimerTask() {
-            override fun run() {
-                view?.post {
-                    findNavController().navigate(R.id.action_splashNav_to_mainScreenNav)
-                }
-            }
-        }, 2000)*/
 
         return inflater.inflate(R.layout.splash_screen, container, false)
     }

@@ -31,6 +31,10 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val savedRestaurantImageData = getRestaurantImage(dataList[position].id)
+        /* prioritising profile picture loading: if the user didn't upload a custom one, then the
+        *  image from API will be loaded, if there isn't any or it's an error, then a placeholder
+        *  will be loaded
+        *  else the last uploaded picture will be loaded*/
         if (savedRestaurantImageData == null) {
             Glide.with(holder.image.context).load(dataList[position].image_url)
                     .placeholder(R.drawable.logo)
@@ -99,6 +103,7 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>,
         this.restaurantImageEntities = restaurantImageEntities
     }
 
+    // checking if the selected restaurant is part of the favorite restaurants
     fun checkIsFavorite(restaurant: Restaurant) : Boolean {
         if (favorities != null) {
             favorities.forEach() {
@@ -110,6 +115,7 @@ class MainScreenRecyclerViewAdapter(dataSet: MutableList<Restaurant>,
         return false
     }
 
+    // returns the latest image data for a restaurant
     fun getRestaurantImage(rid: Int): ByteArray? {
         restaurantImageEntities.forEach {
             if(it.rid == rid) {

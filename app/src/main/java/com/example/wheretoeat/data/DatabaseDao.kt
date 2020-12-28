@@ -6,6 +6,7 @@ import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.entity.UserEntity
 
+// data access object interface for saving and retrieving data from the local database
 @Dao
 interface DatabaseDao {
 
@@ -26,6 +27,7 @@ interface DatabaseDao {
     @Query("SELECT * FROM restaurant_image_table WHERE rid = :restaurantId ORDER by id DESC")
     suspend fun readRestaurantImages(restaurantId: Int) : MutableList<RestaurantImageEntity>
 
+    // legfrissebb kepet veszem ki az adatbazisbol(a restaurant profilkephez)
     @Query("SELECT MAX(id) as id, rid, imageData FROM restaurant_image_table GROUP by rid")
     suspend fun readAllRestaurantImages() : MutableList<RestaurantImageEntity>
 

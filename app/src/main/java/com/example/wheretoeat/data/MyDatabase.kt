@@ -8,6 +8,7 @@ import com.example.wheretoeat.entity.FavoriteRestaurantsEntity
 import com.example.wheretoeat.entity.RestaurantImageEntity
 import com.example.wheretoeat.entity.UserEntity
 
+// creating local database
 @Database(entities = [UserEntity::class, RestaurantImageEntity::class, FavoriteRestaurantsEntity::class], version = 4, exportSchema = false)
 abstract class MyDatabase : RoomDatabase() {
 

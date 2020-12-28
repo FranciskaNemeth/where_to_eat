@@ -77,12 +77,15 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
 
         myDatabaseViewModel.getFavoriteRestaurants()
 
+        // loading the favorite restaurant list in order to display the correct heart icon(is favorite or not)
         myDatabaseViewModel.favoriteRestaurantsList.observe(requireActivity(), Observer{ favorities ->
             favoritiesList.clear()
             favoritiesList.addAll(favorities)
             recyclerView.adapter!!.notifyDataSetChanged()
         })
 
+        // loading and displaying the restaurants from the API
+        // if the user searched for something, the search result will come through here
         viewModel.restaurantsFilteredList.observe(requireActivity(), Observer { response ->
             displayList.clear()
             displayList.addAll(response)
@@ -90,6 +93,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
             hasStartedDataRetrieval = false
         })
 
+        // if there are errors regarding the API, an alertdialog is displayed
         viewModel.error.observe(requireActivity(), Observer { result ->
             val alertDialog = AlertDialog.Builder(requireContext())
             alertDialog.setTitle(result.toString())
@@ -104,6 +108,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
             alertDialog.show()
         })
 
+        // displaying the favorite restaurants images in the recyclerview
         myDatabaseViewModel.restaurantImages.observe(requireActivity(), Observer {
             restaurantImageEntities.clear()
             restaurantImageEntities.addAll(it)
@@ -126,11 +131,13 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         requireActivity().setTitle("Where To Eat")
     }
 
+    // navigating to restaurant detail screen
     override fun onItemClick(position: Int) {
         val restaurant = displayList[position]
         viewModel.setSelectedRestaurant(restaurant)
         var flag = false
         myDatabaseViewModel.favoriteRestaurantsList.value!!.forEach {
+            // checking if selected restaurant is favorite restaurant in order to set the heart icon on detail screen
             if (it.id == restaurant.id) {
                 viewModel.selectedFavoriteRestaurant.value = it
                 flag = true
@@ -143,6 +150,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         findNavController().navigate(R.id.action_mainScreenNav_to_detailNav)
     }
 
+    // adding or deleting restaurant from favorites on heart icon click
     override fun addOrRemoveFavorites(position: Int, shouldAdd: Boolean) {
         val restaurant = viewModel.convertRestaurantToFavoriteRestaurantEntity(displayList[position])
         if (shouldAdd == true) {
@@ -154,6 +162,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
         }
     }
 
+    // listener which notifies if the recyclerview has been moved
     private fun getOnScrollListener(): RecyclerView.OnScrollListener {
 
         return object: RecyclerView.OnScrollListener() {
@@ -162,6 +171,8 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
                 val totalItemCount = layoutManager.itemCount
                 val lastVisible = layoutManager.findLastVisibleItemPosition()
 
+                // if the recyclerview has displayed the fifth from last element
+                // we start loading the next page of restaurants from API
                 val endHasBeenReached = lastVisible + 5 >= totalItemCount
 
                 if (totalItemCount > 0 && endHasBeenReached) {
@@ -172,6 +183,7 @@ class MainScreenFragment : Fragment(), OnRestaurantItemClickListener {
 
                     if (currentPage != null && perPageItems != null && totalItems != null) {
 
+                        // checking if there are more restaurants to be downloaded
                         if (currentPage * perPageItems < totalItems && !hasStartedDataRetrieval) {
                             hasStartedDataRetrieval = true
                             viewModel.getRestaurantsPaginated(viewModel.cityName, currentPage + 1)
